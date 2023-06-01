@@ -4,6 +4,8 @@
 
 #### Data respone:
 
+##### http://api.local.gotecq.net/gotecq.user-management/dashboard GET
+
 ```bash
 {
 		"total__companies": 694,
@@ -27,6 +29,8 @@
 
 ### User info + other profiles
 
+##### http://api.local.gotecq.net/gotecq.user-management/profile GET
+
 #### Data respone:
 
 ```bash
@@ -48,6 +52,8 @@
 
 ### Company info (advance: show users + roles in these company)
 
+##### http://api.local.gotecq.net/gotecq.user-management/company GET
+
 #### Data respone:
 
 ```bash
@@ -62,6 +68,8 @@
 ```
 
 ### Show user have official role in company
+
+##### http://api.local.gotecq.net/gotecq.user-management/user-role GET
 
 #### Data respone:
 
@@ -79,6 +87,8 @@
 ```
 
 ### Log activity
+
+##### http://api.local.gotecq.net/gotecq.user-management/log-activity GET
 
 #### Data respone:
 
