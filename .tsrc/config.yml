@@ -1,0 +1,6 @@
+manifest_url: git@github.com:gotecq/be.training.api-master.git
+manifest_branch: main
+repo_groups: []
+shallow_clones: false
+clone_all_repos: false
+singular_remote:

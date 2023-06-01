@@ -1,0 +1,9 @@
+{
+  "python.analysis.extraPaths": [
+    "./lib/fii-cqrs/src",
+    "./lib/sanic-cqrs/src",
+    "./lib/sanic-query/lib",
+    "./lib/sanic-query/src",
+    "./lib/sanic-validator/src"
+  ]
+}
