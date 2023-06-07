@@ -9,6 +9,7 @@
 - In application we have 2 role kinds:
     - SYSTEM - Define by system
     - USER - Define by user
+    
 --> You can define one field in table role to specify each role kind, or create 2 table `system-role` and `user-role` and create one view using `UNION`
 
 - Each role in table `role` must have one field to define this role belong to one `company_kind`: `SYSTEM`, `NETWORK`, `ORGANIZATION`
