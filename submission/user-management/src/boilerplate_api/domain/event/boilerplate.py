@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import CreateBoilerplateEventData, CreateCardEventData, CreateBankEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData
+from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -10,14 +10,7 @@ _entity = BoilerplateDomain.entity
 _committer = BoilerplateDomain.event_committer
 
 
-@_entity
-class BoilerplateCreated(Event):
-    data = field(type=CreateBoilerplateEventData, mandatory=True)
 
-
-@_committer(BoilerplateCreated)
-async def process__boilerplate_created(statemgr, event):
-    yield InsertRecord(resource=event.target.resource, data=event.data)
 
 #----------------------------------------------------------------
 
@@ -33,12 +26,12 @@ async def process__card_created(statemgr, event):
 #----------------------------------------------------------------
 
 @_entity
-class BankCreated(Event):
-    data = field(type=CreateBankEventData, mandatory=True)
+class UserCreated(Event):
+    data = field(type=CreateUserEventData, mandatory=True)
 
 
-@_committer(BankCreated)
-async def process__bank_created(statemgr, event):
+@_committer(UserCreated)
+async def process__user_created(statemgr, event):
     yield InsertRecord(resource=event.target.resource, data=event.data)
     
 #----------------------------------------------------------------
@@ -127,3 +120,16 @@ async def process__money_transferred(statemgr, event):
         identifier = destination_card._id
     )
 
+@_entity('customer-updated')
+class CustomerUpdated(Event):
+    data = field(type=UpdateCustomerEventData, mandatory=True)
+
+@_committer(CustomerUpdated)
+async def process__customer_updated(statemgr, event):
+    from fii import logger
+    logger.warning("New DATA: %s", event.data)
+    
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)

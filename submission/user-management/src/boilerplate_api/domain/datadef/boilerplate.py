@@ -7,16 +7,6 @@ from fii_cqrs.event import EventData
 from fii_cqrs.identifier import UUID_TYPE
 
 
-class CreateBoilerplateData(CommandData):
-    name = field(type=str, mandatory=True)
-    description = field(type=str, mandatory=True)
-
-
-class CreateBoilerplateEventData(EventData):
-    _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
-
-    name = field(type=str, mandatory=True)
-    description = field(type=str, mandatory=True)
 
 #----------------------------------------------------------------
 class CreateCardData(CommandData):
@@ -32,30 +22,22 @@ class CreateCardEventData(EventData):
     customer_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
 #----------------------------------------------------------------
-class CreatebankData(CommandData):
-    bank__name = field(type=str, mandatory=True)
-    address__line = field(type=str, mandatory=True)
-    address__city = field(type=str, mandatory=True)
-    address__state = field(type=str, mandatory=True)
-    address__country = field(type=str, mandatory=True)
-    postal__code = field(type=str, mandatory=True)
-    phone = field(type=str, mandatory=True)
-    
-class CreateBankEventData(EventData):
+class CreateUserData(CommandData):
+    username = field(type=str, mandatory=True)
+    password = field(type=str, mandatory=True)
+    status = field(type=str, mandatory=True)
+class CreateUserEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
 
-    bank__name = field(type=str, mandatory=True)
-    address__line = field(type=str, mandatory=True)
-    address__city = field(type=str, mandatory=True)
-    address__state = field(type=str, mandatory=True)
-    address__country = field(type=str, mandatory=True)
-    postal__code = field(type=str, mandatory=True)
-    phone = field(type=str, mandatory=True)
+    username = field(type=str, mandatory=True)
+    password = field(type=str, mandatory=True)
+    status = field(type=str, mandatory=True)
+    
     
 #----------------------------------------------------------------
 class CreateCustomerData(CommandData):
     identity_number = field(type=str, mandatory=True)
-    fist_name = field(type=str, mandatory=True)
+    first_name = field(type=str, mandatory=True)
     last_name = field(type=str, mandatory=True)
     phone = field(type=str, mandatory=True)
     address__city = field(type=str, mandatory=True)
@@ -65,11 +47,18 @@ class CreateCustomerEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
 
     identity_number = field(type=str, mandatory=True)
-    fist_name = field(type=str, mandatory=True)
+    first_name = field(type=str, mandatory=True)
     last_name = field(type=str, mandatory=True)
     phone = field(type=str, mandatory=True)
     address__city = field(type=str, mandatory=True)
 
+class UpdateCustomerData(CommandData):
+    first_name = field(type=str, mandatory=True)
+    last_name = field(type=str, mandatory=True)
+    
+class UpdateCustomerEventData(EventData):
+    first_name = field(type=str, mandatory=True)
+    last_name = field(type=str, mandatory=True)
 #----------------------------------------------------------------
 class CreateTransactiontypeData(CommandData):
     transaction_type = field(type=str, mandatory=True)
@@ -130,7 +119,7 @@ class TransferMoneyData(CommandData):
 
 class CardUpdateEventData(EventData):
     balance = field(type=float)
-    
+
 
 class TransferMoneyEventData(EventData):
     source_card_id = field(type=UUID_TYPE,  mandatory=True)

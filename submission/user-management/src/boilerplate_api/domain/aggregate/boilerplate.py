@@ -1,23 +1,12 @@
-from boilerplate_api.query import card, customer
 from fii_cqrs.aggregate import Aggregate
 from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import CreateBoilerplateData, CreateCardData, CreatebankData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData  # noqa
-from boilerplate_api.domain.datadef import CreateBoilerplateEventData,CreateCardEventData, CreateBankEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData  # noqa
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData,UpdateCustomerData  # noqa
+from boilerplate_api.domain.datadef import CreateCardEventData, CreateUserEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData  # noqa
 
 
-class BoilerplateAggregate(Aggregate):
-    async def do__create_boilerplate(
-        self, data: CreateBoilerplateData
-    ) -> Event:
-        event_data = CreateBoilerplateEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
-        return self.create_event(
-            "boilerplate-created", target=self.aggroot, data=event_data
-        )
-        
+
 # Card
 class CardAggregate(Aggregate):
     async def do__create_card(
@@ -30,16 +19,16 @@ class CardAggregate(Aggregate):
             "card-created", target=self.aggroot, data=event_data
         )
         
-# Bank
-class BankAggregate(Aggregate):
-    async def do__create_bank(
-        self, data: CreatebankData
+# user
+class UserAggregate(Aggregate):
+    async def do__create_user(
+        self, data: CreateUserData
     ) -> Event:
-        event_data = CreateBankEventData.extend_pclass(
+        event_data = CreateUserEventData.extend_pclass(
             pclass=data, _id=UUID_GENR()
         )
         return self.create_event(
-            "bank-created", target=self.aggroot, data=event_data
+            "user-created", target=self.aggroot, data=event_data
         )
 
 # Customer
@@ -53,6 +42,25 @@ class CustomerAggregate(Aggregate):
         return self.create_event(
             "customer-created", target=self.aggroot, data=event_data
         )
+        
+    async def do__update_customer(
+        self, data: UpdateCustomerData
+    ) -> Event:
+        customer = await self.fetch_aggroot()
+
+        updated_customer = {
+            "first_name": data.first_name,
+            "last_name": data.last_name
+        }
+
+        return self.create_event(
+            "customer-updated",
+            target=self.aggroot,
+            data=UpdateCustomerEventData(
+                first_name=updated_customer["first_name"],
+                last_name=updated_customer["last_name"]
+            )
+        )
 
 # TransactionType
 class TransactiontypeAggregate(Aggregate):
@@ -65,6 +73,8 @@ class TransactiontypeAggregate(Aggregate):
         return self.create_event(
             "transactiontype-created", target=self.aggroot, data=event_data
         )
+
+ 
 
 # TransactionRecord
 class TransactionrecordAggregate(Aggregate):

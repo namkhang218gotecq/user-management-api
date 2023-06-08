@@ -1,33 +1,30 @@
 from fii_cqrs.command import Command, field
 
-from boilerplate_api.domain.datadef import CreateBoilerplateData, CreateCardData, CreatebankData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData
 from ..domain import BoilerplateDomain
 
 _entity = BoilerplateDomain.entity
 _handler = BoilerplateDomain.command_handler
 
-
-@_entity("create-boilerplate")
-class CreateBoilerplate(Command):
-    data = field(type=CreateBoilerplateData)
+#  user
+@_entity("create-user") 
+class CreateUser(Command):
+    data = field(type=CreateUserData)
 
     class Meta:
-        resource = "boilerplate"
-        tags = ["boilerplate"]
-        description = "Create new boilerplate"
+        resource = "user"
+        tags = ["user"]
+        description = "Create new user"
 
-
-@_handler(CreateBoilerplate)
-async def handle_create_boilerplate(aggproxy, cmd: CreateBoilerplate):
-    from fii import logger
-    logger.warning("================================")
-    event = await aggproxy.create_boilerplate(cmd.data)
+@_handler(CreateUser)
+async def handle_create_user(aggproxy, cmd: CreateUser):
+    
+    event = await aggproxy.create_user(cmd.data)
     yield event
     yield aggproxy.create_response(
-        "boilerplate-response", cmd, {"_id": event.data._id}
+        "user-response", cmd, {"_id": event.data._id}
     )
     
-
 #  card
 @_entity("create-card") 
 class CreateCard(Command):
@@ -162,24 +159,7 @@ async def handle_transfer_money(aggproxy, cmd: CreateCard):
     
     
 
-#  bank
-@_entity("create-bank") 
-class CreateBank(Command):
-    data = field(type=CreatebankData)
 
-    class Meta:
-        resource = "bank"
-        tags = ["bank Command"]
-        description = "Create new bank"
-
-@_handler(CreateBank)
-async def handle_create_bank(aggproxy, cmd: CreateBank):
-    
-    event = await aggproxy.create_bank(cmd.data)
-    yield event
-    yield aggproxy.create_response(
-        "bank-response", cmd, {"_id": event.data._id}
-    )
 
 #  customer
 @_entity("create-customer") 
@@ -199,6 +179,35 @@ async def handle_create_customer(aggproxy, cmd: CreateCustomer):
     yield aggproxy.create_response(
         "customer-response", cmd, {"_id": event.data._id}
     )
+
+@_entity
+class UpdateCustomer(Command):
+    data = field(type=UpdateCustomerData, mandatory=True)
+    
+    class Meta:
+        resource = "customer/{id}"
+        tags = ["customer"]
+        description = "Update customer information"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "User ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+
+
+@_handler(UpdateCustomer)
+async def handle_update_customer(aggproxy, cmd: CreateCustomer):
+    event = await aggproxy.update_customer(cmd.data)
+    yield event
+
+
+
 
 #transactionType
 @_entity("create-transactiontype") 

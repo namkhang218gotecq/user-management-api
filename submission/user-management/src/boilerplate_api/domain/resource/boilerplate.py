@@ -6,16 +6,10 @@ from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
 
-from boilerplate_api.model import BoilerplateModel, CardModel, BankModel, CustomerModel, TransactiontypeModel, TransactionrecordModel
+from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactiontypeModel, TransactionrecordModel
 
 
-@cr.register("boilerplate")
-class BoilerplateResource(PostgresCqrsResource):
-    __backend__ = BoilerplateModel
 
-    _id = field(type=UUID_TYPE)
-    name = field(type=nullable(str))
-    description = field(type=nullable(str))
 
 #----------------------------------------------------------------
 @cr.register("card")
@@ -28,18 +22,14 @@ class CardResource(PostgresCqrsResource):
     customer_id = field(type=UUID_TYPE)
     
 #----------------------------------------------------------------
-@cr.register("bank")
+@cr.register("user")
 class CardResource(PostgresCqrsResource):
-    __backend__ = BankModel
+    __backend__ = UserModel
 
     _id = field(type=UUID_TYPE)
-    bank__name = field(type=str)
-    address__line = field(type=str)
-    address__city = field(type=str)
-    address__state = field(type=str)
-    address__country = field(type=str)
-    postal__code = field(type=str)
-    phone = field(type=str)
+    username = field(type=str)
+    password = field(type=str)
+    
 #----------------------------------------------------------------
 @cr.register("customer")
 class CustomerResource(PostgresCqrsResource):
@@ -47,11 +37,10 @@ class CustomerResource(PostgresCqrsResource):
 
     _id = field(type=UUID_TYPE)
     identity_number = field(type=str)
-    fist_name = field(type=str)
+    first_name = field(type=str)
     last_name = field(type=str)
     phone = field(type=str)
     address__city = field(type=str)
-
 #----------------------------------------------------------------
 @cr.register("transactiontype")
 class TransactiontypeResource(PostgresCqrsResource):

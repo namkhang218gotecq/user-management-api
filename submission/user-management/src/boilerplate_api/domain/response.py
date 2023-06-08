@@ -15,11 +15,6 @@ def to_dict(data):
     return data
 
 
-@_entity("boilerplate-response")
-class BoilerplateResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
-
-#----------------------------------------------------------------
 
 @_entity("card-response")
 class CardResponse(CqrsResponse):
@@ -27,14 +22,14 @@ class CardResponse(CqrsResponse):
     
 #----------------------------------------------------------------
 
-@_entity("bank-response")
-class BankResponse(CqrsResponse):
+@_entity("user-response")
+class UserResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True)
     
 #----------------------------------------------------------------
 
 @_entity("customer-response")
-class BankResponse(CqrsResponse):
+class CustomerResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True)
     
 #----------------------------------------------------------------
@@ -45,10 +40,6 @@ class TransactiontypeResponse(CqrsResponse):
     
 #----------------------------------------------------------------
 
-@_entity("transactionrecord-response")
-class TransactionrecordResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
-    
 @_entity("general-response")
 class GeneralResponse(CqrsResponse):
     data = field(type=dict, mandatory=True)

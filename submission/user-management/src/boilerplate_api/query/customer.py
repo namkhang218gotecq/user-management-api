@@ -19,7 +19,7 @@ class CustomerQuery(BaseQueryResource):
     
     _id = f.StringField("ID", identifier=True)
     identity_number = f.StringField("identity_number")
-    fist_name = f.StringField("fist_name")
+    first_name = f.StringField("first_name")
     last_name = f.StringField("last_name")
     phone = f.StringField("phone")
     address__city = f.StringField("address__city")

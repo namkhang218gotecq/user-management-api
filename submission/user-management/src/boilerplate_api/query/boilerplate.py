@@ -14,17 +14,6 @@ class BaseQueryResource(QueryResource):
     _updater = f.UUIDField("Updater")
 
 
-class BoilerplateQuery(BaseQueryResource):
-    __table__ = "boilerplate"
-
-    _id = f.StringField("ID", identifier=True)
-    name = f.StringField("Name")
-    description = f.StringField("Description")
-
-    class Meta:
-        tags = ["Boilerplate"]
-        description = "Get boilerplate data"
-
 class TransactionTypeQuery(BaseQueryResource):
     __table__ = "transaction_type"
     

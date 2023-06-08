@@ -18,3 +18,4 @@ class BoilerplateDomain(GinoDomain):
     EventStore = PostgresEventStore
     CommandStore = PostgresCommandStore
     ContextStore = PostgresContextStore
+ 
