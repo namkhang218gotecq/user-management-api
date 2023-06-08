@@ -5,6 +5,7 @@ from . import boilerplate
 from . import card
 from . import user
 from . import customer
+from . import system
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -17,7 +18,7 @@ def configure_query(app):
     register_view(card.CardQuery)
     register_view(user.UserQuery)
     register_view(customer.CustomerQuery)
-    register_view(boilerplate.TransactionTypeQuery)
     register_view(boilerplate.TransactionRecordQuery)
+    register_view(system.SystemQuery)
     
     

@@ -1,6 +1,6 @@
 from fii_cqrs.command import Command, field
 
-from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData, UpdateUserData,CreateSystemRoleData
 from ..domain import BoilerplateDomain
 
 _entity = BoilerplateDomain.entity
@@ -24,7 +24,91 @@ async def handle_create_user(aggproxy, cmd: CreateUser):
     yield aggproxy.create_response(
         "user-response", cmd, {"_id": event.data._id}
     )
+# Update user
+@_entity
+class UpdateUser(Command):
+    data = field(type=UpdateUserData, mandatory=True)
     
+    class Meta:
+        resource = "user/{id}"
+        tags = ["user"]
+        description = "Update user information"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "User ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+
+
+@_handler(UpdateUser)
+async def handle_update_user(aggproxy, cmd: UpdateUserData):
+    event = await aggproxy.update_user(cmd.data)
+    yield event
+
+#Create system role 
+@_entity("create-system-role") 
+class CreateSystemRole(Command):
+    data = field(type=CreateSystemRoleData)
+
+    class Meta:
+        resource = "system-role"
+        tags = ["system-role"]
+        description = "Create new system role"
+
+@_handler(CreateSystemRole)
+async def handle_create_system_role(aggproxy, cmd: CreateUser):
+    
+    event = await aggproxy.create_system_role(cmd.data)
+    yield event
+    yield aggproxy.create_response(
+        "system-role-response", cmd, {"_id": event.data._id}
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #  card
 @_entity("create-card") 
 class CreateCard(Command):
@@ -209,24 +293,7 @@ async def handle_update_customer(aggproxy, cmd: CreateCustomer):
 
 
 
-#transactionType
-@_entity("create-transactiontype") 
-class CreateTransactiontype(Command):
-    data = field(type=CreateTransactiontypeData)
 
-    class Meta:
-        resource = "transactiontype"
-        tags = ["transactionType"]
-        description = "Create new transaction type"
-
-@_handler(CreateTransactiontype)
-async def handle_create_transactiontype(aggproxy, cmd: CreateTransactiontype):
-    
-    event = await aggproxy.create_transactiontype(cmd.data)
-    yield event
-    yield aggproxy.create_response(
-        "transactiontype-response", cmd, {"_id": event.data._id}
-    )
 
 #transactionRecord
 @_entity("create-transactionrecord") 

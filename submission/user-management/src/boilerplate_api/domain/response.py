@@ -13,33 +13,50 @@ def to_dict(data):
         return data.serialize()
 
     return data
-
-
-
-@_entity("card-response")
-class CardResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
-    
 #----------------------------------------------------------------
 
 @_entity("user-response")
 class UserResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True)
-    
+        
 #----------------------------------------------------------------
 
+@_entity("system-role-response")
+class SystemRoleResponse(CqrsResponse):
+    data = field(type=dict, factory=to_dict, mandatory=True)
+
+    
+    
+
+
+    
+    
+
+
+    
+    
+
+
+    
+    
+
+
+    
+
+#----------------------------------------------------------------
+
+@_entity("card-response")
+class CardResponse(CqrsResponse):
+    data = field(type=dict, factory=to_dict, mandatory=True)
+#----------------------------------------------------------------
 @_entity("customer-response")
 class CustomerResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True)
     
-#----------------------------------------------------------------
 
-@_entity("transactiontype-response")
-class TransactiontypeResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
-    
 #----------------------------------------------------------------
 
 @_entity("general-response")
 class GeneralResponse(CqrsResponse):
     data = field(type=dict, mandatory=True)
+

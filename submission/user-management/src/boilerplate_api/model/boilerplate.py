@@ -5,7 +5,49 @@ from fii_cqrs.backend.gino import GinoBaseModel, db
 from boilerplate_api import config
 
 
+class UserModel(GinoBaseModel):
+    __tablename__ = "account"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
 
+    _id = db.Column(UUID, primary_key=True)
+    username = db.Column(db.String)
+    password = db.Column(db.String)
+    status = db.Column(db.String)
+
+
+class SystemRoleModel(GinoBaseModel):
+    __tablename__ = "system-role"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
+    
+    _id = db.Column(UUID, primary_key=True)
+    name = db.Column(db.String)
+    key = db.Column(db.String)
+    description = db.Column(db.String)
+    active = db.Column(db.String)
+    company_kind = db.Column(db.String)
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 class CardModel(GinoBaseModel):
     __tablename__ = "card"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
@@ -19,14 +61,7 @@ class CardModel(GinoBaseModel):
 
 
 
-class UserModel(GinoBaseModel):
-    __tablename__ = "account"
-    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
 
-    _id = db.Column(UUID, primary_key=True)
-    username = db.Column(db.String)
-    password = db.Column(db.String)
-    status = db.Column(db.String)
 
 class CustomerModel(GinoBaseModel):
     __tablename__ = "customer"
@@ -40,13 +75,6 @@ class CustomerModel(GinoBaseModel):
     address__city = db.Column(db.String)
 
 
-class TransactiontypeModel(GinoBaseModel):
-    __tablename__ = "transaction_type"
-    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
-
-    _id = db.Column(UUID, primary_key=True)
-    transaction_type = db.Column(db.String)
-    description = db.Column(db.String)
 
 class TransactionrecordModel(GinoBaseModel):
     __tablename__ = "transaction_record"

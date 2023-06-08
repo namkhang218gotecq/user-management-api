@@ -14,17 +14,6 @@ class BaseQueryResource(QueryResource):
     _updater = f.UUIDField("Updater")
 
 
-class TransactionTypeQuery(BaseQueryResource):
-    __table__ = "transaction_type"
-    
-    _id = f.StringField("ID", identifier=True)
-    transaction_type = f.EnumField("Transaction_type")
-    description = f.StringField("Description")
-
-    class Meta:
-        tags = ["transactionType"]
-        description = "Get transaction type data"
-
 
 class TransactionRecordQuery(BaseQueryResource):
     __table__ = "transaction_record"

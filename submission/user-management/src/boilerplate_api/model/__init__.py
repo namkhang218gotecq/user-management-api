@@ -1,3 +1,3 @@
-from .boilerplate import  CardModel, UserModel, CustomerModel, TransactiontypeModel, TransactionrecordModel   # noqa
+from .boilerplate import  CardModel, UserModel, CustomerModel,  TransactionrecordModel,SystemRoleModel   # noqa
 
-__all__ = ("CardModel", "UserModel","CustomerModel", "TransactiontypeModel", "TransactionrecordModel")
+__all__ = ("CardModel", "UserModel","CustomerModel",  "TransactionrecordModel","SystemRoleModel")

@@ -6,7 +6,37 @@ from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
 
-from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactiontypeModel, TransactionrecordModel
+from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel
+
+
+
+
+    
+#----------------------------------------------------------------
+@cr.register("user")
+class UserResource(PostgresCqrsResource):
+    __backend__ = UserModel
+
+    _id = field(type=UUID_TYPE)
+    username = field(type=str)
+    password = field(type=str)
+    status = field(type=str)
+    
+#----------------------------------------------------------------
+@cr.register("system-role")
+class SystemRoleResource(PostgresCqrsResource):
+    __backend__ = SystemRoleModel
+    
+    _id = field(type=UUID_TYPE)
+    name = field(type=str)
+    key = field(type=str)
+    description = field(type=str)
+    active = field(type=bool)
+    company_kind = field(type=str)
+
+
+
+
 
 
 
@@ -20,16 +50,6 @@ class CardResource(PostgresCqrsResource):
     password = field(type=nullable(str))
     balance = field(type=nullable(float))
     customer_id = field(type=UUID_TYPE)
-    
-#----------------------------------------------------------------
-@cr.register("user")
-class CardResource(PostgresCqrsResource):
-    __backend__ = UserModel
-
-    _id = field(type=UUID_TYPE)
-    username = field(type=str)
-    password = field(type=str)
-    
 #----------------------------------------------------------------
 @cr.register("customer")
 class CustomerResource(PostgresCqrsResource):
@@ -41,14 +61,6 @@ class CustomerResource(PostgresCqrsResource):
     last_name = field(type=str)
     phone = field(type=str)
     address__city = field(type=str)
-#----------------------------------------------------------------
-@cr.register("transactiontype")
-class TransactiontypeResource(PostgresCqrsResource):
-    __backend__ = TransactiontypeModel
-
-    _id = field(type=UUID_TYPE)
-    transaction_type = field(type=str)
-    description = field(type=str)
 
 #----------------------------------------------------------------
 @cr.register("transactionrecord")

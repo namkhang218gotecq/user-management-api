@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData
+from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData,CreateSystemRoleEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -33,8 +33,50 @@ class UserCreated(Event):
 @_committer(UserCreated)
 async def process__user_created(statemgr, event):
     yield InsertRecord(resource=event.target.resource, data=event.data)
+
+@_entity('user-updated')
+class UserUpdated(Event):
+    data = field(type=UpdateUserEventData, mandatory=True)
+
+@_committer(UserUpdated)
+async def process__customer_updated(statemgr, event):
+    from fii import logger
+    logger.warning("UPDATE USER: %s", event.data) #User input data
+    logger.warning("LOG RESOURCE: %s", event.target.resource) #resource name -> table 
+    logger.warning("LOG identifier: %s", event.target.identifier) #id record
     
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)
 #----------------------------------------------------------------
+@_entity
+class SystemRoleCreated(Event):
+    data = field(type=CreateSystemRoleEventData, mandatory=True)
+
+
+@_committer(SystemRoleCreated)
+async def process__system_role_created(statemgr, event):
+    yield InsertRecord(resource=event.target.resource, data=event.data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @_entity
 class CustomerCreated(Event):
@@ -47,17 +89,6 @@ async def process__customer_created(statemgr, event):
     
 #----------------------------------------------------------------
 
-@_entity
-class TransactiontypeCreated(Event):
-    data = field(type=CreateTransactiontypeEventData, mandatory=True)
-
-
-@_committer(TransactiontypeCreated)
-async def process__Transactiontype_created(statemgr, event):
-    yield InsertRecord(resource=event.target.resource, data=event.data)
-    
-    
-#----------------------------------------------------------------
 
 @_entity
 class TransactionrecordCreated(Event):

@@ -2,8 +2,82 @@ from fii_cqrs.aggregate import Aggregate
 from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactiontypeData, CreateTransactionrecordData,UpdateCustomerData  # noqa
-from boilerplate_api.domain.datadef import CreateCardEventData, CreateUserEventData, CreateCustomerEventData, CreateTransactiontypeEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData  # noqa
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData,UpdateCustomerData,UpdateUserData,CreateSystemRoleData  # noqa
+from boilerplate_api.domain.datadef import CreateCardEventData, CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData, CreateSystemRoleEventData  # noqa
+
+
+
+
+# user
+class UserAggregate(Aggregate):
+    async def do__create_user(
+        self, data: CreateUserData
+    ) -> Event:
+        event_data = CreateUserEventData.extend_pclass(
+            pclass=data, _id=UUID_GENR()
+        )
+        return self.create_event(
+            "user-created", target=self.aggroot, data=event_data
+        )
+        
+    async def do__update_user(
+        self, data: UpdateUserData
+    ) -> Event:
+        user = await self.fetch_aggroot()
+
+        updated_user = {
+            "username": data.username,
+            "password": data.password,
+            "status": data.status
+        }
+
+        return self.create_event(
+            "user-updated",
+            target=self.aggroot,
+            data=UpdateUserEventData(
+                username=updated_user["username"],
+                password=updated_user["password"],
+                status= updated_user["status"]
+            )
+        )
+#System role
+
+class SystemRoleAggregate(Aggregate):
+    async def do__create_system_role(
+        self, data: CreateSystemRoleData
+    ) -> Event:
+        event_data = CreateSystemRoleEventData.extend_pclass(
+            pclass=data, _id=UUID_GENR()
+        )
+        return self.create_event(
+            "system-role-created", target=self.aggroot, data=event_data
+        )                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17,18 +91,6 @@ class CardAggregate(Aggregate):
         )
         return self.create_event(
             "card-created", target=self.aggroot, data=event_data
-        )
-        
-# user
-class UserAggregate(Aggregate):
-    async def do__create_user(
-        self, data: CreateUserData
-    ) -> Event:
-        event_data = CreateUserEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
-        return self.create_event(
-            "user-created", target=self.aggroot, data=event_data
         )
 
 # Customer
@@ -62,19 +124,7 @@ class CustomerAggregate(Aggregate):
             )
         )
 
-# TransactionType
-class TransactiontypeAggregate(Aggregate):
-    async def do__create_transactiontype(
-        self, data: CreateTransactiontypeData
-    ) -> Event:
-        event_data = CreateTransactiontypeEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
-        return self.create_event(
-            "transactiontype-created", target=self.aggroot, data=event_data
-        )
 
- 
 
 # TransactionRecord
 class TransactionrecordAggregate(Aggregate):
