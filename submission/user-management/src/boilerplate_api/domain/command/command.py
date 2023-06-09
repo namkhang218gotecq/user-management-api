@@ -1,6 +1,6 @@
 from fii_cqrs.command import Command, field
 
-from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData, UpdateUserData,CreateSystemRoleData
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData
 from ..domain import BoilerplateDomain
 
 _entity = BoilerplateDomain.entity
@@ -71,10 +71,51 @@ async def handle_create_system_role(aggproxy, cmd: CreateUser):
     )
 
 
+# Create company
+@_entity("create-company") 
+class CreateCompany(Command):
+    data = field(type=CreateCompanyData)
+
+    class Meta:
+        resource = "company"
+        tags = ["company"]
+        description = "Create new company"
+
+@_handler(CreateCompany)
+async def handle_create_company(aggproxy, cmd: CreateCompany):
+    
+    event = await aggproxy.create_company(cmd.data)
+    yield event
+    yield aggproxy.create_response(
+        "company-response", cmd, {"_id": event.data._id}
+    )
+
+# Update company
+@_entity
+class UpdateCompany(Command):
+    data = field(type=UpdateCompanyData, mandatory=True)
+    
+    class Meta:
+        resource = "company/{id}"
+        tags = ["company"]
+        description = "Update company information"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Company ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
 
 
-
-
+@_handler(UpdateCompany)
+async def handle_update_company(aggproxy, cmd: UpdateCompanyData):
+    event = await aggproxy.update_company(cmd.data)
+    yield event
 
 
 

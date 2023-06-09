@@ -27,6 +27,60 @@ class SystemRoleModel(GinoBaseModel):
     company_kind = db.Column(db.String)
     
 
+class CompanyModel(GinoBaseModel):
+    __tablename__ = "company"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
+    
+    _id = db.Column(UUID, primary_key=True)
+    status = db.Column(db.String)
+    kind = db.Column(db.String)
+    company_name = db.Column(db.String)
+    telecom__email = db.Column(db.String)
+    telecom__phone = db.Column(db.String)
+    description = db.Column(db.String)
+    address__postal = db.Column(db.String)
+    address__state = db.Column(db.String)
+    address__country = db.Column(db.String)
+    tax_id = db.Column(db.String)
+    category_name = db.Column(db.String)
+    company_code = db.Column(db.String)
+    npi = db.Column(db.String)
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

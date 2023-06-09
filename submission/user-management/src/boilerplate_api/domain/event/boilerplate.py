@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData,CreateSystemRoleEventData
+from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -12,18 +12,7 @@ _committer = BoilerplateDomain.event_committer
 
 
 
-#----------------------------------------------------------------
-
-@_entity
-class CardCreated(Event):
-    data = field(type=CreateCardEventData, mandatory=True)
-
-
-@_committer(CardCreated)
-async def process__card_created(statemgr, event):
-    yield InsertRecord(resource=event.target.resource, data=event.data)
-    
-#----------------------------------------------------------------
+#User
 
 @_entity
 class UserCreated(Event):
@@ -33,7 +22,8 @@ class UserCreated(Event):
 @_committer(UserCreated)
 async def process__user_created(statemgr, event):
     yield InsertRecord(resource=event.target.resource, data=event.data)
-
+    
+#Update user
 @_entity('user-updated')
 class UserUpdated(Event):
     data = field(type=UpdateUserEventData, mandatory=True)
@@ -49,7 +39,8 @@ async def process__customer_updated(statemgr, event):
         resource=event.target.resource, 
         data=event.data, 
         identifier=event.target.identifier)
-#----------------------------------------------------------------
+    
+#Create System role
 @_entity
 class SystemRoleCreated(Event):
     data = field(type=CreateSystemRoleEventData, mandatory=True)
@@ -59,6 +50,28 @@ class SystemRoleCreated(Event):
 async def process__system_role_created(statemgr, event):
     yield InsertRecord(resource=event.target.resource, data=event.data)
 
+#Create company
+@_entity
+class CompanyCreated(Event):
+    data = field(type=CreateCompanyEventData, mandatory=True)
+
+
+@_committer(CompanyCreated)
+async def process__company_created(statemgr, event):
+    yield InsertRecord(resource=event.target.resource, data=event.data)
+
+
+#Update company
+@_entity('company-updated')
+class ComapnyUpdated(Event):
+    data = field(type=UpdateCompanyEventData, mandatory=True)
+
+@_committer(ComapnyUpdated)
+async def process__company_updated(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)
 
 
 
@@ -78,6 +91,46 @@ async def process__system_role_created(statemgr, event):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#----------------------------------------------------------------
+
+@_entity
+class CardCreated(Event):
+    data = field(type=CreateCardEventData, mandatory=True)
+
+
+@_committer(CardCreated)
+async def process__card_created(statemgr, event):
+    yield InsertRecord(resource=event.target.resource, data=event.data)
+    
 @_entity
 class CustomerCreated(Event):
     data = field(type=CreateCustomerEventData, mandatory=True)

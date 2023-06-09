@@ -25,7 +25,10 @@ class UserResponse(CqrsResponse):
 class SystemRoleResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True)
 
-    
+#company
+@_entity("company-response")
+class CompanyResponse(CqrsResponse):
+    data = field(type=dict, factory=to_dict, mandatory=True) 
     
 
 

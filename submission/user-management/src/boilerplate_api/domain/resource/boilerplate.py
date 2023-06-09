@@ -6,7 +6,7 @@ from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
 
-from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel
+from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel, CompanyModel
 
 
 
@@ -33,6 +33,82 @@ class SystemRoleResource(PostgresCqrsResource):
     description = field(type=str)
     active = field(type=bool)
     company_kind = field(type=str)
+#----------------------------------------------------------------
+
+@cr.register("company")
+class CompanyResource(PostgresCqrsResource):
+    __backend__ = CompanyModel
+
+    _id = field(type=UUID_TYPE)
+    status = field(type=str)
+    kind = field(type=str)
+    company_name = field(type=str)
+    telecom__email = field(type=str)
+    telecom__phone = field(type=str)
+    description = field(type=str)
+    address__postal = field(type=str)
+    address__state = field(type=str)
+    address__country = field(type=str)
+    tax_id = field(type=str)
+    category_name = field(type=str)
+    company_code = field(type=str)
+    npi = field(type=str)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

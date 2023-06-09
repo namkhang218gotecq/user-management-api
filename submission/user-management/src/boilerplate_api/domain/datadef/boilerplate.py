@@ -4,17 +4,40 @@ from sanic_validator.pyrsistent.factory import to_uuid
 
 from fii_cqrs.command import CommandData
 from fii_cqrs.event import EventData
+from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 
 
+import re
 
 
     
 #----------------------------------------------------------------
 class CreateUserData(CommandData):
-    username = field(type=str, mandatory=True)
-    password = field(type=str, mandatory=True)
+    def validate_username(email):
+        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            return email
+        else:
+            raise ValueError("Vui lòng nhập định dạng email hợp lệ!")
+
+    def validate_password(password):
+        if len(password) >= 8:
+            return password
+        else:
+            raise ValueError("Mật khẩu phải chứa ít nhất 8 chữ cái")
+
+    username = field(
+        type=str,
+        mandatory=True,
+        factory=validate_username
+    )
+    password = field(
+        type=str,
+        mandatory=True,
+        factory=validate_password
+    )
     status = field(type=str, mandatory=True)
+
 class CreateUserEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
 
@@ -50,7 +73,84 @@ class CreateSystemRoleEventData(CommandData):
     active = field(type=bool, mandatory=True)
     company_kind = field(type=str, mandatory=True)
     
+#Create company
+class CreateCompanyData(CommandData):
+    
+    status = field(type=str, mandatory=True)  
+    kind = field(type=str, mandatory=True)  
+    company_name = field(type=str, mandatory=True)
+    telecom__email = field(type=str, mandatory=True)
+    telecom__phone = field(type=str, mandatory=True)
+    description = field(type=str, mandatory=True)
+    address__postal = field(type=str, mandatory=True)
+    address__state = field(type=str, mandatory=True)
+    address__country = field(type=str, mandatory=True)
+    tax_id = field(type=str, mandatory=True)
+    category_name = field(type=str, mandatory=True)
+    company_code = field(type=str, mandatory=True)
+    npi = field(type=str, mandatory=True)
+    
+class CreateCompanyEventData(CommandData):
+    _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    
+    status = field(type=str, mandatory=True)  
+    kind = field(type=str, mandatory=True)  
+    company_name = field(type=str, mandatory=True)
+    telecom__email = field(type=str, mandatory=True)
+    telecom__phone = field(type=str, mandatory=True)
+    description = field(type=str, mandatory=True)
+    address__postal = field(type=str, mandatory=True)
+    address__state = field(type=str, mandatory=True)
+    address__country = field(type=str, mandatory=True)
+    tax_id = field(type=str, mandatory=True)
+    category_name = field(type=str, mandatory=True)
+    company_code = field(type=str, mandatory=True)
+    npi = field(type=str, mandatory=True)
+    
+#Update company
 
+class UpdateCompanyData(CommandData):
+    status = field(type=nullable(str))  
+    kind = field(type=str)  
+    company_name = field(type=str)
+    telecom__email = field(type=str)
+    telecom__phone = field(type=str)
+    description = field(type=str)
+    address__postal = field(type=str)
+    address__state = field(type=str)
+    address__country = field(type=str)
+    tax_id = field(type=str)
+    category_name = field(type=str)
+    company_code = field(type=str)
+    npi = field(type=str)
+    
+class UpdateCompanyEventData(CommandData):
+    status = field(type=str)  
+    kind = field(type=str)  
+    company_name = field(type=str)
+    telecom__email = field(type=str)
+    telecom__phone = field(type=str)
+    description = field(type=str)
+    address__postal = field(type=str)
+    address__state = field(type=str)
+    address__country = field(type=str)
+    tax_id = field(type=str)
+    category_name = field(type=str)
+    company_code = field(type=str)
+    npi = field(type=str)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
