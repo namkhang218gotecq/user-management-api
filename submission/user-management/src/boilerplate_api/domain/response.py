@@ -29,10 +29,12 @@ class SystemRoleResponse(CqrsResponse):
 @_entity("company-response")
 class CompanyResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True) 
-    
 
+#profile
+@_entity("profile-response")
+class ProfileResponse(CqrsResponse):
+    data = field(type=dict, factory=to_dict, mandatory=True) 
 
-    
     
 
 

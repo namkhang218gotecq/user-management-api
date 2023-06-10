@@ -6,7 +6,7 @@ from fii_cqrs.command import CommandData
 from fii_cqrs.event import EventData
 from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
-
+from datetime import date
 
 import re
 
@@ -139,6 +139,83 @@ class UpdateCompanyEventData(CommandData):
     company_code = field(type=str)
     npi = field(type=str)
     
+# Create profile 
+class CreateProfileData(CommandData):
+    account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    status = field(type=str, mandatory=True)
+    name__family = field(type=str, mandatory=True)
+    name__given = field(type=str, mandatory=True)
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=str)
+    birth_date = field(type=date)
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    
+    
+class CreateProfileEventData(CommandData):
+    _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    
+    account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    status = field(type=str, mandatory=True)
+    name__family = field(type=str, mandatory=True)
+    name__given = field(type=str, mandatory=True)
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=str)
+    birth_date = field(type=nullable(date))
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    
+# Update profile
+
+class UpdateProfileData(CommandData):
+    status = field(type=nullable(str))
+    name__family = field(type=nullable(str))
+    name__given = field(type=nullable(str))
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=nullable(str))
+    birth_date = field(type=nullable(date))
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    
+class UpdateProfileEventData(CommandData):
+    status = field(type=nullable(str))
+    name__family = field(type=nullable(str))
+    name__given = field(type=nullable(str))
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=nullable(str))
+    birth_date = field(type=nullable(date))
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)  
     
     
     
@@ -146,6 +223,53 @@ class UpdateCompanyEventData(CommandData):
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
     
     
     

@@ -1,6 +1,6 @@
 from fii_cqrs.command import Command, field
 
-from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData
+from boilerplate_api.domain.datadef import  CreateCardData, CreateUserData, CreateCustomerData, CreateTransactionrecordData, WithdrawMoneyData, DepositMoneyData, TransferMoneyData,UpdateCustomerData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData
 from ..domain import BoilerplateDomain
 
 _entity = BoilerplateDomain.entity
@@ -117,10 +117,52 @@ async def handle_update_company(aggproxy, cmd: UpdateCompanyData):
     event = await aggproxy.update_company(cmd.data)
     yield event
 
+# Create profile
+
+@_entity("create-profile") 
+class CreateProfile(Command):
+    data = field(type=CreateProfileData)
+
+    class Meta:
+        resource = "profile"
+        tags = ["profile"]
+        description = "Create new profile"
+
+@_handler(CreateProfile)
+async def handle_create_profile(aggproxy, cmd: CreateProfileData):
+    
+    event = await aggproxy.create_profile(cmd.data)
+    yield event
+    yield aggproxy.create_response(
+        "profile-response", cmd, {"_id": event.data._id}
+    )
+
+# Update profile
+@_entity
+class UpdateProfile(Command):
+    data = field(type=UpdateProfileData, mandatory=True)
+    
+    class Meta:
+        resource = "profile/{id}"
+        tags = ["profile"]
+        description = "Update profile information"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Profile ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
 
 
-
-
+@_handler(UpdateProfile)
+async def handle_update_profile(aggproxy, cmd: UpdateProfileData):
+    event = await aggproxy.update_profile(cmd.data)
+    yield event
 
 
 

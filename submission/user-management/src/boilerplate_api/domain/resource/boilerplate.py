@@ -5,8 +5,9 @@ from fii_cqrs import resource as cr
 from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
+from datetime import date
 
-from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel, CompanyModel
+from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel, CompanyModel, ProfileModel
 
 
 
@@ -55,8 +56,29 @@ class CompanyResource(PostgresCqrsResource):
     npi = field(type=str)
 
 
+@cr.register("profile")
+class ProfileResource(PostgresCqrsResource):
+    __backend__ = ProfileModel
 
-
+    _id = field(type=UUID_TYPE)
+    
+    account_id = field(type=UUID_TYPE)
+    company_id = field(type=UUID_TYPE)
+    status = field(type=str, mandatory=True)
+    name__family = field(type=str, mandatory=True)
+    name__given = field(type=str, mandatory=True)
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=str)
+    birth_date = field(type=nullable(date))
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE))
 
 
 

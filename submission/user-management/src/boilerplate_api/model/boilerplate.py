@@ -13,8 +13,6 @@ class UserModel(GinoBaseModel):
     username = db.Column(db.String)
     password = db.Column(db.String)
     status = db.Column(db.String)
-
-
 class SystemRoleModel(GinoBaseModel):
     __tablename__ = "system-role"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
@@ -46,10 +44,35 @@ class CompanyModel(GinoBaseModel):
     company_code = db.Column(db.String)
     npi = db.Column(db.String)
 
+class ProfileModel(GinoBaseModel):
+    __tablename__ = "profile"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
     
+    _id = db.Column(UUID, primary_key=True)
+    account_id = db.Column(UUID)
+    company_id = db.Column(UUID)
+    status = db.Column(db.String)
+    name__family = db.Column(db.String)
+    name__given = db.Column(db.String)
+    telecom__email = db.Column(db.String)
+    telecom__phone = db.Column(db.String)
+    address__postal = db.Column(db.String)
+    address__state = db.Column(db.String)
+    address__country = db.Column(db.String)
+    address__line = db.Column(db.String)
+    gender = db.Column(db.String)
+    birth_date = db.Column(db.Date)
+    name__suffix = db.Column(db.String)
+    name__prefix = db.Column(db.String)
+    name__middle = db.Column(db.String)
+    avatar = db.Column(UUID)
     
+class ViewProfileModel(GinoBaseModel):
+    __tablename__ = "profile_status_view"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
     
-    
+    _id = db.Column(UUID, primary_key=True)
+    profile_status = db.Column(db.String)
     
     
     

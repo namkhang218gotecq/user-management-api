@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData
+from boilerplate_api.domain.datadef import  CreateCardEventData,CreateUserEventData, CreateCustomerEventData, CreateTransactionrecordEventData, CardUpdateEventData, TransferMoneyEventData, UpdateCustomerEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -74,11 +74,28 @@ async def process__company_updated(statemgr, event):
         identifier=event.target.identifier)
 
 
+#Create profile
+@_entity
+class ProfileCreated(Event):
+    data = field(type=CreateProfileEventData, mandatory=True)
 
 
+@_committer(ProfileCreated)
+async def process__profile_created(statemgr, event):
+    yield InsertRecord(resource=event.target.resource, data=event.data)
 
 
+#Update profile
+@_entity('profile-updated')
+class ProfileUpdated(Event):
+    data = field(type=UpdateProfileEventData, mandatory=True)
 
+@_committer(ProfileUpdated)
+async def process__profile_updated(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)
 
 
 

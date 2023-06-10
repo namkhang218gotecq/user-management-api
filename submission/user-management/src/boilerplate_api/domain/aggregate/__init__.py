@@ -1,5 +1,5 @@
-from .boilerplate import  CardAggregate, UserAggregate, CustomerAggregate,  TransactionrecordAggregate,SystemRoleAggregate, CompanyAggregate
+from .boilerplate import  CardAggregate, UserAggregate, CustomerAggregate,  TransactionrecordAggregate,SystemRoleAggregate, CompanyAggregate, ProfileAggregate
 
 
-class Aggregate(CardAggregate, UserAggregate, CustomerAggregate,  TransactionrecordAggregate,SystemRoleAggregate, CompanyAggregate):
+class Aggregate(CardAggregate, UserAggregate, CustomerAggregate,  TransactionrecordAggregate,SystemRoleAggregate, CompanyAggregate, ProfileAggregate):
     pass

@@ -31,3 +31,4 @@ DEPLOY_SET
 .scannerwork/
 .vscode
 .env
+.DS_Store

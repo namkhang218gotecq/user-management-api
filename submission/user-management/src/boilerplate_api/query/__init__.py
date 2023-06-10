@@ -7,6 +7,8 @@ from . import user
 from . import customer
 from . import system
 from . import company
+from . import profile
+from . import viewProfile
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -22,5 +24,7 @@ def configure_query(app):
     register_view(boilerplate.TransactionRecordQuery)
     register_view(system.SystemQuery)
     register_view(company.CompanyQuery)
+    register_view(profile.ProfileQuery)
+    register_view(viewProfile.ProfileQuery)
     
     
