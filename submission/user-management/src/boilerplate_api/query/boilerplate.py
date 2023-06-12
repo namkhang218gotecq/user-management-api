@@ -15,15 +15,3 @@ class BaseQueryResource(QueryResource):
 
 
 
-class TransactionRecordQuery(BaseQueryResource):
-    __table__ = "transaction_record"
-    
-    _id = f.StringField("ID", identifier=True)
-    card_id = f.UUIDField("Card_id")
-    transaction_type_id = f.UUIDField("Transaction_type_id")
-    amount = f.FloatField("amount")
-    message = f.StringField("Message")
-    class Meta:
-        tags = ["transactionRecord"]
-        description = "Get transaction record data"
-

@@ -47,16 +47,6 @@ class ProfileResponse(CqrsResponse):
 
 
     
-
-#----------------------------------------------------------------
-
-@_entity("card-response")
-class CardResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
-#----------------------------------------------------------------
-@_entity("customer-response")
-class CustomerResponse(CqrsResponse):
-    data = field(type=dict, factory=to_dict, mandatory=True)
     
 
 #----------------------------------------------------------------

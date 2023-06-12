@@ -1,1 +1,1 @@
-from .boilerplate import *  # noqa
+from .event import *  # noqa

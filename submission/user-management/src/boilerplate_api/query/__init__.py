@@ -1,10 +1,7 @@
 from sanic_query.resource import register_resource
 
 from boilerplate_api import config
-from . import boilerplate
-from . import card
 from . import user
-from . import customer
 from . import system
 from . import company
 from . import profile
@@ -18,10 +15,7 @@ def configure_query(app):
         auth_decorator=False,
     )
 
-    register_view(card.CardQuery)
     register_view(user.UserQuery)
-    register_view(customer.CustomerQuery)
-    register_view(boilerplate.TransactionRecordQuery)
     register_view(system.SystemQuery)
     register_view(company.CompanyQuery)
     register_view(profile.ProfileQuery)
