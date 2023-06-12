@@ -111,27 +111,16 @@ class CompanyAggregate(Aggregate):
 
 class ProfileAggregate(Aggregate):
     async def do__create_profile(
-        self, data: CreateProfileData
+        self, data: CreateProfileEventData
     ) -> Event:
-        event_data = CreateProfileEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
+        
         return self.create_event(
-            "profile-created", target=self.aggroot, data=event_data
+            "profile-created", target=self.aggroot, data=data
         )
     
-
+   
     async def do__update_profile(self, data: UpdateProfileData) -> Event:
         profile = await self.fetch_aggroot()
-
-        # account_obj = await self.fetch_rootobj("user", profile.account_id)
-        # account_status = account_obj.status
-
-        # company_obj = await self.fetch_rootobj("company", profile.company_id)
-        # company_status = company_obj.status
-    
-        # profile_status = self.combine_profile_status(account_status, company_status)
-
         updated_profile = {
             "status": data.status,
             "name__family": data.name__family,

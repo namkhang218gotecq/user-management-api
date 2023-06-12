@@ -1,10 +1,13 @@
 from fii_cqrs.command import Command, field
+from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData
+from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData
 from ..domain import BoilerplateDomain
-
+from .helper import combine_profile_status
 _entity = BoilerplateDomain.entity
 _handler = BoilerplateDomain.command_handler
+
+
 
 #  user
 @_entity("create-user") 
@@ -130,12 +133,21 @@ class CreateProfile(Command):
 
 @_handler(CreateProfile)
 async def handle_create_profile(aggproxy, cmd: CreateProfileData):
-    
-    event = await aggproxy.create_profile(cmd.data)
+    company = await aggproxy.state.fetch(
+        "company",cmd.data.company_id
+        )
+    account = await aggproxy.state.fetch(
+        "user",cmd.data.account_id
+    )
+    event_data = CreateProfileEventData.extend_pclass(
+            pclass=cmd.data, _id=UUID_GENR(), status = combine_profile_status(account.status, company.status)
+        )
+    event = await aggproxy.create_profile(event_data)
     yield event
     yield aggproxy.create_response(
         "profile-response", cmd, {"_id": event.data._id}
     )
+    
 
 # Update profile
 @_entity

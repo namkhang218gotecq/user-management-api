@@ -74,10 +74,17 @@ class ViewProfileModel(GinoBaseModel):
     _id = db.Column(UUID, primary_key=True)
     profile_status = db.Column(db.String)
     
+
+class StatusProfileModel(GinoBaseModel):
+    __tablename__ = "profile-info-view"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
+    _id = db.Column(UUID, primary_key=True)
     
-    
-    
-    
+    account_id = db.Column(UUID)
+    company_id = db.Column(UUID)
+    account_status = db.Column(db.String)
+    company_status = db.Column(db.String)
+    profile_status = db.Column(db.String)
     
     
     

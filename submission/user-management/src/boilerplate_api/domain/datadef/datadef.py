@@ -142,7 +142,6 @@ class UpdateCompanyEventData(CommandData):
 class CreateProfileData(CommandData):
     account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
-    status = field(type=str, mandatory=True)
     name__family = field(type=str, mandatory=True)
     name__given = field(type=str, mandatory=True)
     telecom__email = field(type=nullable(str))
@@ -217,12 +216,17 @@ class UpdateProfileEventData(CommandData):
     avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)  
     
     
+class UpdateStatusProfileData(CommandData):
+
+    account_id = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    company_id = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    account_status = field(type=(str))
+    company_status = field(type=(str))
+    profile_status = field(type=nullable(str))
     
-    
-    
-    
-    
-    
+class UpdateStatusEventProfile(CommandData):
+    profile_status = field(type=(str))
+      
     
     
     
