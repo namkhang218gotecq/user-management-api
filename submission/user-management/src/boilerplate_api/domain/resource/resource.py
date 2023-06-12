@@ -7,7 +7,7 @@ from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
 from datetime import date
 
-from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel, CompanyModel, ProfileModel
+from boilerplate_api.model import  CardModel, UserModel, CustomerModel, TransactionrecordModel,SystemRoleModel, CompanyModel, ProfileModel, StatusProfileModel
 
 
 
