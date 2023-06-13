@@ -1,11 +1,11 @@
 from pyrsistent import field
-from sanic_validator.pyrsistent.factory import to_uuid
+from sanic_validator.pyrsistent.factory import to_uuid, str_to_datetime 
 
 from fii_cqrs.command import CommandData
 from fii_cqrs.event import EventData
 from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
-from datetime import date
+from datetime import date, datetime
 
 import re
 
@@ -124,19 +124,19 @@ class UpdateCompanyData(CommandData):
     npi = field(type=str)
     
 class UpdateCompanyEventData(CommandData):
-    status = field(type=str)  
-    kind = field(type=str)  
-    company_name = field(type=str)
-    telecom__email = field(type=str)
-    telecom__phone = field(type=str)
-    description = field(type=str)
-    address__postal = field(type=str)
-    address__state = field(type=str)
-    address__country = field(type=str)
-    tax_id = field(type=str)
-    category_name = field(type=str)
-    company_code = field(type=str)
-    npi = field(type=str)
+    status = field(type=nullable(str))  
+    kind = field(type=nullable(str))  
+    company_name = field(type=nullable(str))
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    description = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    tax_id = field(type=nullable(str))
+    category_name = field(type=nullable(str))
+    company_code = field(type=nullable(str))
+    npi = field(type=nullable(str))
     
 # Create profile 
 class CreateProfileData(CommandData):
@@ -151,7 +151,7 @@ class CreateProfileData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=str)
-    birth_date = field(type=date)
+    birth_date = field(type=datetime)
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
@@ -173,7 +173,7 @@ class CreateProfileEventData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=str)
-    birth_date = field(type=nullable(date))
+    birth_date = field(type=nullable(datetime))
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
@@ -192,7 +192,7 @@ class UpdateProfileData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=nullable(str))
-    birth_date = field(type=nullable(date))
+    birth_date = field(type=nullable(datetime))
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
@@ -209,7 +209,7 @@ class UpdateProfileEventData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=nullable(str))
-    birth_date = field(type=nullable(date))
+    birth_date = field(type=nullable(datetime))
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
@@ -217,16 +217,12 @@ class UpdateProfileEventData(CommandData):
     
     
 class UpdateStatusProfileData(CommandData):
-
-    account_id = field(type=nullable(UUID_TYPE), factory=to_uuid)
-    company_id = field(type=nullable(UUID_TYPE), factory=to_uuid)
-    account_status = field(type=(str))
-    company_status = field(type=(str))
-    profile_status = field(type=nullable(str))
+    pass
     
 class UpdateStatusEventProfile(CommandData):
-    profile_status = field(type=(str))
-      
+    status = field(type=(str))
+
+
     
     
     

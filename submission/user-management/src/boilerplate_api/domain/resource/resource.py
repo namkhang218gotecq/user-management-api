@@ -4,7 +4,7 @@ from fii_cqrs import resource as cr
 from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
-from datetime import date
+from datetime import date, datetime
 
 from boilerplate_api.model import   UserModel ,SystemRoleModel, CompanyModel, ProfileModel
 
@@ -72,8 +72,8 @@ class ProfileResource(PostgresCqrsResource):
     address__state = field(type=nullable(str))
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
-    gender = field(type=str)
-    birth_date = field(type=nullable(date))
+    gender = field(type=nullable(str))
+    birth_date = field(type=nullable(datetime))
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))

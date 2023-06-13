@@ -1,7 +1,7 @@
 from fii_cqrs.command import Command, field
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData
+from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData
 from ..domain import BoilerplateDomain
 from .helper import combine_profile_status
 _entity = BoilerplateDomain.entity
@@ -176,8 +176,31 @@ async def handle_update_profile(aggproxy, cmd: UpdateProfileData):
     event = await aggproxy.update_profile(cmd.data)
     yield event
 
-
-
+# suspend profile
+@_entity
+class SuspendProfile(Command):
+    data = field(type=UpdateStatusProfileData, mandatory=True)
+    
+    class Meta:
+        resource = "profile/{id}"
+        tags = ["profile"]
+        description = "Suspend profile"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Profile ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(SuspendProfile)
+async def handle_suspend_profile(aggproxy, cmd: UpdateStatusProfileData):
+    event = await aggproxy.suspend_profile(cmd.data)
+    yield event
 
 
 

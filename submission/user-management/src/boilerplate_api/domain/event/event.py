@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData,UpdateStatusProfileData, UpdateStatusEventProfile
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -97,6 +97,17 @@ async def process__profile_updated(statemgr, event):
         data=event.data, 
         identifier=event.target.identifier)
 
+#suspend profile
+@_entity('profile-suspended')
+class ProfileSuspended(Event):
+    data = field(type=UpdateStatusEventProfile, mandatory=True)
+
+@_committer(ProfileSuspended)
+async def process__suspend_profile(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)
 
 
 

@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import UUID
 
 from fii_cqrs.backend.gino import GinoBaseModel, db
-
+from enum import Enum
 from boilerplate_api import config
 
 
@@ -44,6 +44,14 @@ class CompanyModel(GinoBaseModel):
     company_code = db.Column(db.String)
     npi = db.Column(db.String)
 
+class StatusEnum(Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    PENDING = "PENDING"
+    EXPIRED = "EXPIRED"
+    COMPANY_DEACTIVATED = "COMPANY_DEACTIVATED"
+    DEACTIVATED = "DEACTIVATED"
+    
 class ProfileModel(GinoBaseModel):
     __tablename__ = "profile"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
@@ -61,7 +69,7 @@ class ProfileModel(GinoBaseModel):
     address__country = db.Column(db.String)
     address__line = db.Column(db.String)
     gender = db.Column(db.String)
-    birth_date = db.Column(db.Date)
+    birth_date = db.Column(db.DateTime)
     name__suffix = db.Column(db.String)
     name__prefix = db.Column(db.String)
     name__middle = db.Column(db.String)
