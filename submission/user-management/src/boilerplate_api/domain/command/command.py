@@ -120,6 +120,9 @@ async def handle_update_company(aggproxy, cmd: UpdateCompanyData):
     event = await aggproxy.update_company(cmd.data)
     yield event
 
+
+
+
 # Create profile
 
 @_entity("create-profile") 
@@ -203,9 +206,32 @@ async def handle_suspend_profile(aggproxy, cmd: UpdateStatusProfileData):
     yield event
 
 
+# active profile
 
-
-
+@_entity
+class ActiveProfile(Command):
+    data = field(type=UpdateStatusProfileData, mandatory=True)
+    
+    class Meta:
+        resource = "profile/{id}"
+        tags = ["profile"]
+        description = "Active profile"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Profile ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+    
+@_handler(ActiveProfile)
+async def handle_active_profile(aggproxy, cmd: UpdateStatusProfileData):
+    event = await aggproxy.active_profile(cmd.data)
+    yield event   
 
 
 

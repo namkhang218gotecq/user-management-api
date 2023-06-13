@@ -9,11 +9,7 @@ from ..domain import BoilerplateDomain
 _entity = BoilerplateDomain.entity
 _committer = BoilerplateDomain.event_committer
 
-
-
-
 #User
-
 @_entity
 class UserCreated(Event):
     data = field(type=CreateUserEventData, mandatory=True)
@@ -110,7 +106,16 @@ async def process__suspend_profile(statemgr, event):
         identifier=event.target.identifier)
 
 
+@_entity('profile-active')
+class ProfileActive(Event):
+    data = field(type=UpdateStatusEventProfile, mandatory=True)
 
+@_committer(ProfileActive)
+async def process__active_profile(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier)
 
 
 

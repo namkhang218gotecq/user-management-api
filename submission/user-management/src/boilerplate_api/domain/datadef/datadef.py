@@ -48,7 +48,6 @@ class UpdateUserData(CommandData):
     username = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)
     status = field(type=str, mandatory=True)
-    
 class UpdateUserEventData(EventData):
     username = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)

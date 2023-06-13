@@ -103,13 +103,29 @@ class ProfileAggregate(Aggregate):
     async def do__suspend_profile(self, data: UpdateStatusProfileData) -> Event:
         profile = await self.fetch_aggroot()
 
+        if profile.status == "INACTIVE":
+            raise ValueError("Profile hiện tại đã INACTIVE. Vui lòng nhập 1 id profile khác.")
+        
         return self.create_event(
             "profile-suspended",
             target=self.aggroot, 
             data=UpdateStatusEventProfile(
-                status = "INACTIVE",
+                status="INACTIVE",
             )
-        )
+    )
+    async def do__active_profile(self, data: UpdateStatusProfileData) -> Event:
+        profile = await self.fetch_aggroot()
+
+        if profile.status == "ACTIVE":
+            raise ValueError("Profile hiện tại đã ACTIVE. Vui lòng nhập 1 id profile khác.")
+        
+        return self.create_event(
+            "profile-active",
+            target=self.aggroot, 
+            data=UpdateStatusEventProfile(
+                status="ACTIVE",
+            )
+    )
 
 
 
