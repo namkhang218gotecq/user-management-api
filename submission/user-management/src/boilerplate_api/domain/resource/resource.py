@@ -6,7 +6,7 @@ from fii_cqrs.identifier import UUID_TYPE
 from sanic_cqrs import PostgresCqrsResource
 from datetime import date, datetime
 
-from boilerplate_api.model import   UserModel ,SystemRoleModel, CompanyModel, ProfileModel
+from boilerplate_api.model import   UserModel ,SystemRoleModel, CompanyModel, ProfileModel,CompanyRoleModel
 
 
 
@@ -79,11 +79,15 @@ class ProfileResource(PostgresCqrsResource):
     name__middle = field(type=nullable(str))
     avatar = field(type=nullable(UUID_TYPE))
 
+@cr.register("company-profile")
+class CompanyRoleResource(PostgresCqrsResource):
+    __backend__ = CompanyRoleModel
 
+    _id = field(type=UUID_TYPE)
 
-
-
-
+    profile_id = field(type=UUID_TYPE)
+    company_id = field(type=UUID_TYPE)
+    role_id = field(type=UUID_TYPE)
 
 
 

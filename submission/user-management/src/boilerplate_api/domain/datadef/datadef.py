@@ -233,7 +233,18 @@ class UpdateStatusCompanyData(CommandData):
 class UpdateStatusCompanyEvent(CommandData):
     status = field(type=(str))
     
+# company-profile
+
+class CompanyRoleData(CommandData):
+    profile_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    role_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+class CompanyRoleEventData(CommandData):
+    _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
+    profile_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    role_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
     
     

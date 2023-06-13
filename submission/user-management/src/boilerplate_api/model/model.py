@@ -13,6 +13,7 @@ class UserModel(GinoBaseModel):
     username = db.Column(db.String)
     password = db.Column(db.String)
     status = db.Column(db.String)
+    
 class SystemRoleModel(GinoBaseModel):
     __tablename__ = "system-role"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
@@ -95,8 +96,16 @@ class StatusProfileModel(GinoBaseModel):
     profile_status = db.Column(db.String)
     
     
+# 
+class CompanyRoleModel(GinoBaseModel):
+    __tablename__ = "company-profile"
+    __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
     
-    
+    _id = db.Column(UUID, primary_key=True)
+    profile_id = db.Column(UUID)
+    company_id = db.Column(UUID)
+    role_id = db.Column(UUID)
+ 
     
     
     

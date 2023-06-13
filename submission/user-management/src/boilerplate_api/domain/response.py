@@ -36,10 +36,9 @@ class ProfileResponse(CqrsResponse):
     data = field(type=dict, factory=to_dict, mandatory=True) 
 
     
-
-
-    
-    
+@_entity("role-response")
+class RoleResponse(CqrsResponse):
+    data = field(type=dict, factory=to_dict, mandatory=True)
 
 
     

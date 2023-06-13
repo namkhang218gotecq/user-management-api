@@ -3,7 +3,7 @@ from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
 from boilerplate_api.domain.datadef import   CreateUserData,UpdateUserData,CreateSystemRoleData,CreateCompanyData,UpdateCompanyData, CreateProfileData, UpdateProfileData,UpdateStatusProfileData,UpdateStatusAccountData # noqa
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent  # noqa
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleData,CompanyRoleEventData  # noqa
 
 from boilerplate_api.model import StatusEnum
 
@@ -154,11 +154,19 @@ class ProfileAggregate(Aggregate):
                 status="ACTIVE",
             )
     )
+        
 
-
-
-
-
+# Add user to company role
+class CompanyRoleAggregate(Aggregate):
+    async def do__create_role(
+        self, data: CompanyRoleData
+    ) -> Event:
+        event_data = CompanyRoleEventData.extend_pclass(
+            pclass=data, _id=UUID_GENR()
+        )
+        return self.create_event(
+            "role-created", target=self.aggroot, data=event_data
+        )
 
 
 

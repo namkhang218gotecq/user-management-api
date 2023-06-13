@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -153,10 +153,16 @@ class CompanyDeactivated(Event):
 
 
 
+#Role
+@_entity
+class RoleCreated(Event):
+    data = field(type=CompanyRoleEventData, mandatory=True)
 
 
-
-
+@_committer(RoleCreated)
+async def process__create_role(statemgr, event):
+    yield InsertRecord(resource=event.target.resource, data=event.data)
+    
 
 
 

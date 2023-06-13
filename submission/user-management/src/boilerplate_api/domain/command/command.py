@@ -1,7 +1,7 @@
 from fii_cqrs.command import Command, field
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData, UpdateStatusAccountData
+from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData, UpdateStatusAccountData,CompanyRoleData
 from ..domain import BoilerplateDomain
 from .helper import combine_profile_status
 _entity = BoilerplateDomain.entity
@@ -286,11 +286,24 @@ async def handle_active_profile(aggproxy, cmd: UpdateStatusProfileData):
     yield event   
 
 
+# Add user to company role
+@_entity("add-companyrole") 
+class CreateRole(Command):
+    data = field(type=CompanyRoleData)
 
+    class Meta:
+        resource = "company-profile"
+        tags = ["company-profile"]
+        description = "Add user to company role"
 
-
-
-
+@_handler(CreateRole)
+async def handle_create_role(aggproxy, cmd: CompanyRoleData):
+    
+    event = await aggproxy.create_role(cmd.data)
+    yield event
+    yield aggproxy.create_response(
+        "role-response", cmd, {"_id": event.data._id}
+    )
 
 
 
