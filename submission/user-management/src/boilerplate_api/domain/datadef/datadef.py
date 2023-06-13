@@ -221,8 +221,17 @@ class UpdateStatusProfileData(CommandData):
 class UpdateStatusEventProfile(CommandData):
     status = field(type=(str))
 
+class UpdateStatusAccountData(CommandData):
+    pass
 
-    
+class UpdateStatusAccountEvent(CommandData):
+    status = field(type=(str))
+
+class UpdateStatusCompanyData(CommandData):
+    pass
+
+class UpdateStatusCompanyEvent(CommandData):
+    status = field(type=(str))
     
     
     

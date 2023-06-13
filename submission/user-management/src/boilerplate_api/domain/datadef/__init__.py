@@ -1,4 +1,4 @@
-from .datadef import CreateUserData ,UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData, CreateProfileData, UpdateProfileData, UpdateStatusProfileData # noqa, 
-from .datadef import  CreateUserEventData,  UpdateUserEventData,CreateSystemRoleEventData,CreateCompanyEventData,UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData,UpdateStatusEventProfile  # noqa
+from .datadef import CreateUserData ,UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData, CreateProfileData, UpdateProfileData, UpdateStatusProfileData, UpdateStatusAccountData # noqa, 
+from .datadef import  CreateUserEventData,  UpdateUserEventData,CreateSystemRoleEventData,CreateCompanyEventData,UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData,UpdateStatusEventProfile,UpdateStatusAccountEvent  # noqa
 
-__all_ = ("UpdateUserData","UpdateUserEventData","CreateSystemRoleData","CreateSystemRoleEventData","CreateCompanyData","CreateCompanyEventData","UpdateCompanyData", "UpdateCompanyEventData","CreateProfileData","CreateProfileEventData","UpdateProfileEventData","UpdateProfileData","UpdateStatusProfileData","UpdateStatusEventProfile" )
+__all_ = ("UpdateUserData","UpdateUserEventData","CreateSystemRoleData","CreateSystemRoleEventData","CreateCompanyData","CreateCompanyEventData","UpdateCompanyData", "UpdateCompanyEventData","CreateProfileData","CreateProfileEventData","UpdateProfileEventData","UpdateProfileData","UpdateStatusProfileData","UpdateStatusEventProfile","UpdateStatusAccount","UpdateStatusAccountEvent" )

@@ -76,7 +76,7 @@ class ProfileModel(GinoBaseModel):
     avatar = db.Column(UUID)
     
 class ViewProfileModel(GinoBaseModel):
-    __tablename__ = "profile_status_view"
+    __tablename__ = "profile-status-view"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
     
     _id = db.Column(UUID, primary_key=True)

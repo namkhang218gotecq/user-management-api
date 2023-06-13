@@ -1,7 +1,7 @@
 from fii_cqrs.command import Command, field
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData
+from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData, UpdateStatusAccountData
 from ..domain import BoilerplateDomain
 from .helper import combine_profile_status
 _entity = BoilerplateDomain.entity
@@ -53,7 +53,59 @@ class UpdateUser(Command):
 async def handle_update_user(aggproxy, cmd: UpdateUserData):
     event = await aggproxy.update_user(cmd.data)
     yield event
+    
+# Deactivate account
+@_entity
+class DeactivateAccount(Command):
+    data = field(type=UpdateStatusAccountData, mandatory=True)
+    
+    class Meta:
+        resource = "user/{id}"
+        tags = ["user"]
+        description = "Deactivate account"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Account ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(DeactivateAccount)
+async def handle_deactivate_account(aggproxy, cmd: UpdateStatusAccountData):
+    event = await aggproxy.deactivate_account(cmd.data)
+    yield event
 
+# Activate account
+@_entity
+class ActivateAccount(Command):
+    data = field(type=UpdateStatusAccountData, mandatory=True)
+    
+    class Meta:
+        resource = "user/{id}"
+        tags = ["user"]
+        description = "Activate account"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Account ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(ActivateAccount)
+async def handle_activate_account(aggproxy, cmd: UpdateStatusAccountData):
+    event = await aggproxy.activate_account(cmd.data)
+    yield event
+    
 #Create system role 
 @_entity("create-system-role") 
 class CreateSystemRole(Command):

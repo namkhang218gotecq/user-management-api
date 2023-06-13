@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord
 
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData,UpdateStatusProfileData, UpdateStatusEventProfile
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -35,7 +35,36 @@ async def process__customer_updated(statemgr, event):
         resource=event.target.resource, 
         data=event.data, 
         identifier=event.target.identifier)
+
+# deactivate account
+
+@_entity('deactivated-account')
+class DeactivateAccount(Event):
+    data = field(type=UpdateStatusAccountEvent, mandatory=True)
+
+@_committer(DeactivateAccount)
+async def process__deactivate_account(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
     
+# activate account
+
+@_entity('activated-account')
+class ActivateAccount(Event):
+    data = field(type=UpdateStatusAccountEvent, mandatory=True)
+
+@_committer(ActivateAccount)
+async def process__activate_account(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
+
+
 #Create System role
 @_entity
 class SystemRoleCreated(Event):
@@ -117,6 +146,9 @@ async def process__active_profile(statemgr, event):
         data=event.data, 
         identifier=event.target.identifier)
 
+@_entity
+class CompanyDeactivated(Event):
+    company_id = field(type=str, mandatory=True)
 
 
 

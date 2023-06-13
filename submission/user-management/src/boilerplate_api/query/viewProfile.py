@@ -15,7 +15,7 @@ class ProfileQueryResource(QueryResource):
     _updater = f.UUIDField("Updater")
 
 class ProfileQuery(ProfileQueryResource):
-    __table__ = "profile_status_view"
+    __table__ = "profile-status-view"
     
     class Meta:
         tags = ["profile"]

@@ -2,8 +2,8 @@ from fii_cqrs.aggregate import Aggregate
 from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import   CreateUserData,UpdateUserData,CreateSystemRoleData,CreateCompanyData,UpdateCompanyData, CreateProfileData, UpdateProfileData,UpdateStatusProfileData # noqa
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile  # noqa
+from boilerplate_api.domain.datadef import   CreateUserData,UpdateUserData,CreateSystemRoleData,CreateCompanyData,UpdateCompanyData, CreateProfileData, UpdateProfileData,UpdateStatusProfileData,UpdateStatusAccountData # noqa
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent  # noqa
 
 from boilerplate_api.model import StatusEnum
 
@@ -40,6 +40,34 @@ class UserAggregate(Aggregate):
                 status= updated_user["status"]
             )
         )
+# Deactivate account
+    async def do__deactivate_account(self, data: UpdateStatusAccountData) -> Event:
+        account = await self.fetch_aggroot()
+
+        if account.status == "INACTIVE":
+            raise ValueError("Profile hiện tại đã INACTIVE. Vui lòng nhập 1 id account khác.")
+        
+        return self.create_event(
+            "deactivated-account",
+            target=self.aggroot, 
+            data=UpdateStatusAccountEvent(
+                status="INACTIVE",
+            )
+    )
+# Activate account
+    async def do__activate_account(self, data: UpdateStatusAccountData) -> Event:
+        account = await self.fetch_aggroot()
+
+        if account.status == "ACTIVE":
+            raise ValueError("Profile hiện tại đã ACTIVE. Vui lòng nhập 1 id account khác.")
+        
+        return self.create_event(
+            "activated-account",
+            target=self.aggroot, 
+            data=UpdateStatusAccountEvent(
+                status="ACTIVE",
+            )
+    )
 #System role
 
 class SystemRoleAggregate(Aggregate):
