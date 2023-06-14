@@ -1,7 +1,7 @@
 from fii_cqrs.command import Command, field
 from fii_cqrs.identifier import UUID_GENR
 
-from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData, UpdateStatusAccountData,CompanyRoleData, CreateUserEventData
+from boilerplate_api.domain.datadef import  CreateUserData, UpdateUserData,CreateSystemRoleData,CreateCompanyData, UpdateCompanyData,CreateProfileData, UpdateProfileData, CreateProfileEventData, UpdateStatusProfileData, UpdateStatusAccountData,CompanyRoleData, CreateUserEventData, UpdateUserEventData
 from ..domain import BoilerplateDomain
 from .helper import combine_profile_status
 _entity = BoilerplateDomain.entity
@@ -81,6 +81,23 @@ class DeactivateAccount(Command):
         
 @_handler(DeactivateAccount)
 async def handle_deactivate_account(aggproxy, cmd: UpdateStatusAccountData):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "account_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        company = await aggproxy.state.fetch(
+            "company", profile.company_id
+        )
+        event_status_user = await aggproxy.update_profile(UpdateProfileData(status = combine_profile_status("INACTIVE", company.status), _id = profile._id))
+        yield event_status_user
+    
+    
     event = await aggproxy.deactivate_account(cmd.data)
     yield event
 
@@ -107,8 +124,29 @@ class ActivateAccount(Command):
         
 @_handler(ActivateAccount)
 async def handle_activate_account(aggproxy, cmd: UpdateStatusAccountData):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "account_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        company = await aggproxy.state.fetch(
+            "company", profile.company_id
+        )
+        event_status_user = await aggproxy.update_profile(UpdateProfileData(status = combine_profile_status("ACTIVE", company.status), _id = profile._id))
+        yield event_status_user
+    
+    
+    
     event = await aggproxy.activate_account(cmd.data)
     yield event
+    
+    
+    
     
 #Create system role 
 @_entity("create-system-role") 
@@ -232,7 +270,10 @@ class UpdateProfile(Command):
 
 @_handler(UpdateProfile)
 async def handle_update_profile(aggproxy, cmd: UpdateProfileData):
-    event = await aggproxy.update_profile(cmd.data)
+    event = await aggproxy.update_profile(UpdateProfileData.extend_pclass(
+        pclass=cmd.data, _id = cmd.aggroot.identifier
+    ))
+    
     yield event
 
 # suspend profile
@@ -310,5 +351,30 @@ async def handle_create_role(aggproxy, cmd: CompanyRoleData):
     )
 
 
+# remove user from company role
+@_entity
+class RemoveRole(Command):
+    pass
+    
+    class Meta:
+        resource = "company-profile/{id}"
+        tags = ["company-profile"]
+        description = "Remove user from company role"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Company Profile ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+    
+@_handler(RemoveRole)
+async def handle_remove_role(aggproxy, cmd: CompanyRoleData):
+    event = await aggproxy.remove_role(cmd.data)
+    yield event   
 
 

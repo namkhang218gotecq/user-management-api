@@ -48,9 +48,9 @@ class UpdateUserData(CommandData):
     password = field(type=str, mandatory=True)
     status = field(type=str, mandatory=True)
 class UpdateUserEventData(EventData):
-    username = field(type=str, mandatory=True)
-    password = field(type=str, mandatory=True)
-    status = field(type=str, mandatory=True)  
+    username = field(type=nullable(str))
+    password = field(type=nullable(str))
+    status = field(type=nullable(str))  
     
 #----------------------------------------------------------------
 
@@ -180,6 +180,9 @@ class CreateProfileEventData(CommandData):
 # Update profile
 
 class UpdateProfileData(CommandData):
+    
+    _id = field(type=UUID_TYPE, factory=to_uuid)
+    
     status = field(type=nullable(str))
     name__family = field(type=nullable(str))
     name__given = field(type=nullable(str))
@@ -235,6 +238,7 @@ class UpdateStatusCompanyEvent(CommandData):
 # company-profile
 
 class CompanyRoleData(CommandData):
+    
     profile_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     role_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
@@ -246,10 +250,7 @@ class CompanyRoleEventData(CommandData):
     role_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
     
-    
-    
-    
-    
+
     
     
     

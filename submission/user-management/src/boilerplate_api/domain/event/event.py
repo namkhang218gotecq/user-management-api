@@ -1,6 +1,6 @@
 from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
-from fii_cqrs.state import InsertRecord
+from fii_cqrs.state import InsertRecord, InvalidateRecord
 
 from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleEventData
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
@@ -165,7 +165,13 @@ async def process__create_role(statemgr, event):
     
 
 
+@_entity("role-deleted")
+class RemoveRole(Event):
+    pass
 
+@_committer(RemoveRole)
+async def process__remove_role(statemgr, event):
+    yield InvalidateRecord(resource=event.target.resource, identifier=event.target.identifier)
 
 
 

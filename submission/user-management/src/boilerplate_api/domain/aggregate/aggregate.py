@@ -38,6 +38,19 @@ class UserAggregate(Aggregate):
                 status= updated_user["status"]
             )
         )
+    async def do__update_user_status(
+        self, data: UpdateUserEventData
+    ) -> Event:
+        user = await self.fetch_aggroot()
+        
+        return self.create_event(
+            "user-updated",
+            target=self.aggroot,
+            data=UpdateUserEventData.extend_pclass(
+                pclass=data
+            )
+        )
+        
 # Deactivate account
     async def do__deactivate_account(self, data: UpdateStatusAccountData) -> Event:
         account = await self.fetch_aggroot()
@@ -104,6 +117,7 @@ class CompanyAggregate(Aggregate):
             )
         )
 
+
 # Create profile
 
 class ProfileAggregate(Aggregate):
@@ -117,10 +131,13 @@ class ProfileAggregate(Aggregate):
     
    
     async def do__update_profile(self, data: UpdateProfileData) -> Event:
-       
+        print("DATA:",  data)
         return self.create_event(
             "profile-updated",
-            target=self.aggroot,
+            target= {
+                "resource": "profile",
+                "identifier": data._id
+            },
             data=UpdateProfileEventData.extend_pclass(
                 pclass=data
             )
@@ -166,6 +183,13 @@ class CompanyRoleAggregate(Aggregate):
             "role-created", target=self.aggroot, data=event_data
         )
 
+    async def do__remove_role(
+        self, data = CompanyRoleEventData
+    )-> Event:
+        
+        return self.create_event(
+            "role-deleted",  target={"resource": self.aggroot.resource, "identifier": data._id}
+        )                       
 
 
 
