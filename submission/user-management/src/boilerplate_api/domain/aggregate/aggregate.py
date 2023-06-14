@@ -3,7 +3,7 @@ from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
 from boilerplate_api.domain.datadef import   CreateUserData,UpdateUserData,CreateSystemRoleData,CreateCompanyData,UpdateCompanyData, CreateProfileData, UpdateProfileData,UpdateStatusProfileData,UpdateStatusAccountData # noqa
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleData,CompanyRoleEventData  # noqa
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleData,CompanyRoleEventData ,UpdateStatusCompanyEvent,UpdateStatusCompanyData # noqa
 
 from boilerplate_api.model import StatusEnum
 
@@ -98,11 +98,9 @@ class CompanyAggregate(Aggregate):
     async def do__create_company(
         self, data: CreateCompanyData
     ) -> Event:
-        event_data = CreateCompanyEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
+        
         return self.create_event(
-            "company-created", target=self.aggroot, data=event_data
+            "company-created", target=self.aggroot, data=data
         )
         
     async def do__update_company(
@@ -116,7 +114,34 @@ class CompanyAggregate(Aggregate):
                 pclass=data
             )
         )
+# Deactivate company
+    async def do__deactivate_company(self, data: UpdateStatusCompanyData) -> Event:
+        company = await self.fetch_aggroot()
 
+        if company.status == "INACTIVE":
+            raise ValueError("Company hiện tại đã INACTIVE. Vui lòng nhập 1 id company khác.")
+        
+        return self.create_event(
+            "deactivated-company",
+            target=self.aggroot, 
+            data=UpdateStatusCompanyEvent(
+                status="INACTIVE",
+            )
+    )
+# Activate company
+    async def do__activate_company(self, data: UpdateStatusCompanyData) -> Event:
+        company = await self.fetch_aggroot()
+
+        if company.status == "ACTIVE":
+            raise ValueError("Company hiện tại đã ACTIVE. Vui lòng nhập 1 id company khác.")
+        
+        return self.create_event(
+            "activated-company",
+            target=self.aggroot, 
+            data=UpdateStatusCompanyEvent(
+                status="ACTIVE",
+            )
+    )
 
 # Create profile
 
@@ -131,7 +156,6 @@ class ProfileAggregate(Aggregate):
     
    
     async def do__update_profile(self, data: UpdateProfileData) -> Event:
-        print("DATA:",  data)
         return self.create_event(
             "profile-updated",
             target= {
@@ -184,11 +208,11 @@ class CompanyRoleAggregate(Aggregate):
         )
 
     async def do__remove_role(
-        self, data = CompanyRoleEventData
+        self
     )-> Event:
         
         return self.create_event(
-            "role-deleted",  target={"resource": self.aggroot.resource, "identifier": data._id}
+            "role-deleted",  target={"resource": self.aggroot.resource, "identifier": self.aggroot.identifier}
         )                       
 
 

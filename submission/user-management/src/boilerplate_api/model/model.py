@@ -108,8 +108,19 @@ class CompanyRoleModel(GinoBaseModel):
  
 
     
+# class LogActivityModel(GinoBaseModel):
+#     __tablename__ = "activity-log"
+#     __table_args__ = dict(schema=config.CQRS_SCHEMA)
     
     
+#     _id = db.Column(UUID, primary_key=True)
+#     logroot__identifier = db.Column(UUID)
+#     logroot__resource = db.Column(db.String)
+#     logroot__namespace = db.Column(db.String)
+#     domain = db.Column(db.String)
+#     message = db.Column(db.String)
+#     msgtype = db.Column(db.String)
+#     msglabel = db.Column(db.String)
     
     
     

@@ -73,7 +73,6 @@ class CreateSystemRoleEventData(CommandData):
 #Create company
 class CreateCompanyData(CommandData):
     
-    status = field(nullable(str))  
     kind = field(nullable(str))  
     company_name = field(nullable(str))
     telecom__email = field(nullable(str))

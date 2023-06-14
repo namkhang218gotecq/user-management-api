@@ -7,6 +7,10 @@ from . import company
 from . import profile
 from . import viewProfile
 from . import companyinfo
+from . import profileStatus
+from . import companyStatus
+from . import dashboard
+from . import companyKind
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -21,5 +25,11 @@ def configure_query(app):
     register_view(company.CompanyQuery)
     register_view(profile.ProfileQuery)
     register_view(viewProfile.ProfileQuery)
+    #Query for dashboard
+    register_view(dashboard.DashboardQuery)
+    register_view(profileStatus.ProfileStatusQuery)
+    register_view(companyStatus.CompanyStatusQuery)
+    register_view(companyKind.CompanyKindQuery)
+    #Company info 
     register_view(companyinfo.CompanyinfoQuery)
     

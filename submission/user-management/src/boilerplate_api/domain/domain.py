@@ -1,13 +1,14 @@
 from sanic_cqrs import (
     PostgresCommandStore,
     PostgresContextStore,
-    PostgresEventStore,
+    PostgresEventStore
+    
 )
+from fii_cqrs.backend.gino import PostgresActivityLogger
 from sanic_cqrs.domain import GinoDomain
 
 from boilerplate_api import __version__, config
 from .aggregate import Aggregate
-
 
 class BoilerplateDomain(GinoDomain):
     __namespace__ = config.BOILERPLATE_API_DOMAIN
@@ -18,4 +19,4 @@ class BoilerplateDomain(GinoDomain):
     EventStore = PostgresEventStore
     CommandStore = PostgresCommandStore
     ContextStore = PostgresContextStore
- 
+    ActivityLogger = PostgresActivityLogger

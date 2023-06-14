@@ -2,7 +2,7 @@ from fii_cqrs import identifier
 from fii_cqrs.event import Event, field
 from fii_cqrs.state import InsertRecord, InvalidateRecord
 
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleEventData
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData,CreateSystemRoleEventData, CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleEventData,UpdateStatusCompanyEvent
 from fii_cqrs.statemut import GenericStateMutation, UpdateRecord
 from ..domain import BoilerplateDomain
 
@@ -97,7 +97,33 @@ async def process__company_updated(statemgr, event):
         resource=event.target.resource, 
         data=event.data, 
         identifier=event.target.identifier)
+    
+# deactivate company
 
+@_entity('deactivated-company')
+class DeactivateCompany(Event):
+    data = field(type=UpdateStatusCompanyEvent, mandatory=True)
+
+@_committer(DeactivateCompany)
+async def process__deactivate_company(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
+# activated-company
+@_entity('activated-company')
+class ActivateCompany(Event):
+    data = field(type=UpdateStatusCompanyEvent, mandatory=True)
+
+@_committer(ActivateCompany)
+async def process__activate_company(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
+    
 
 #Create profile
 @_entity
@@ -146,10 +172,6 @@ async def process__active_profile(statemgr, event):
         data=event.data, 
         identifier=event.target.identifier)
 
-@_entity
-class CompanyDeactivated(Event):
-    company_id = field(type=str, mandatory=True)
-
 
 
 
@@ -163,6 +185,10 @@ class RoleCreated(Event):
 async def process__create_role(statemgr, event):
     yield InsertRecord(resource=event.target.resource, data=event.data)
     
+
+
+
+
 
 
 @_entity("role-deleted")
