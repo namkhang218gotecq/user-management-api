@@ -11,13 +11,11 @@ from boilerplate_api.model import StatusEnum
 # user
 class UserAggregate(Aggregate):
     async def do__create_user(
-        self, data: CreateUserData
+        self, data: CreateUserEventData
     ) -> Event:
-        event_data = CreateUserEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
-        )
+        
         return self.create_event(
-            "user-created", target=self.aggroot, data=event_data
+            "user-created", target=self.aggroot, data=data
         )
         
     async def do__update_user(

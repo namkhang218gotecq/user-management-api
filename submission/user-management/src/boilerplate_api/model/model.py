@@ -106,11 +106,7 @@ class CompanyRoleModel(GinoBaseModel):
     company_id = db.Column(UUID)
     role_id = db.Column(UUID)
  
-    
-    
-    
-    
-    
+
     
     
     

@@ -15,4 +15,4 @@ BOILERPLATE_SCHEMA = None
 OPENAPI_EXPOSE_SWAGGER_DOCS = True
 OPENAPI_URL_PREFIX = "gotecq.user-management"
 OPENAPI_FILE_META = "tmpl/openapi.yml"
-OPENAPI_TITLE = "Boilerplate API docs"
+OPENAPI_TITLE = "User Management docs"

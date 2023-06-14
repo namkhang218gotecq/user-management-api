@@ -6,6 +6,7 @@ from . import system
 from . import company
 from . import profile
 from . import viewProfile
+from . import companyinfo
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -20,5 +21,5 @@ def configure_query(app):
     register_view(company.CompanyQuery)
     register_view(profile.ProfileQuery)
     register_view(viewProfile.ProfileQuery)
-    
+    register_view(companyinfo.CompanyinfoQuery)
     

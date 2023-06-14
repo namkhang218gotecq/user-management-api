@@ -35,7 +35,6 @@ class CreateUserData(CommandData):
         mandatory=True,
         factory=validate_password
     )
-    status = field(type=str, mandatory=True)
 
 class CreateUserEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
@@ -74,36 +73,36 @@ class CreateSystemRoleEventData(CommandData):
 #Create company
 class CreateCompanyData(CommandData):
     
-    status = field(type=str, mandatory=True)  
-    kind = field(type=str, mandatory=True)  
-    company_name = field(type=str, mandatory=True)
-    telecom__email = field(type=str, mandatory=True)
-    telecom__phone = field(type=str, mandatory=True)
-    description = field(type=str, mandatory=True)
-    address__postal = field(type=str, mandatory=True)
-    address__state = field(type=str, mandatory=True)
-    address__country = field(type=str, mandatory=True)
-    tax_id = field(type=str, mandatory=True)
-    category_name = field(type=str, mandatory=True)
-    company_code = field(type=str, mandatory=True)
-    npi = field(type=str, mandatory=True)
+    status = field(nullable(str))  
+    kind = field(nullable(str))  
+    company_name = field(nullable(str))
+    telecom__email = field(nullable(str))
+    telecom__phone = field(nullable(str))
+    description = field(nullable(str))
+    address__postal = field(nullable(str))
+    address__state = field(nullable(str))
+    address__country = field(nullable(str))
+    tax_id = field(nullable(str))
+    category_name = field(nullable(str))
+    company_code = field(nullable(str))
+    npi = field(nullable(str))
     
 class CreateCompanyEventData(CommandData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
-    status = field(type=str, mandatory=True)  
-    kind = field(type=str, mandatory=True)  
-    company_name = field(type=str, mandatory=True)
-    telecom__email = field(type=str, mandatory=True)
-    telecom__phone = field(type=str, mandatory=True)
-    description = field(type=str, mandatory=True)
-    address__postal = field(type=str, mandatory=True)
-    address__state = field(type=str, mandatory=True)
-    address__country = field(type=str, mandatory=True)
-    tax_id = field(type=str, mandatory=True)
-    category_name = field(type=str, mandatory=True)
-    company_code = field(type=str, mandatory=True)
-    npi = field(type=str, mandatory=True)
+    status = field(nullable(str))  
+    kind = field(nullable(str))  
+    company_name = field(nullable(str))
+    telecom__email = field(nullable(str))
+    telecom__phone = field(nullable(str))
+    description = field(nullable(str))
+    address__postal = field(nullable(str))
+    address__state = field(nullable(str))
+    address__country = field(nullable(str))
+    tax_id = field(nullable(str))
+    category_name = field(nullable(str))
+    company_code = field(nullable(str))
+    npi = field(nullable(str))
     
 #Update company
 
