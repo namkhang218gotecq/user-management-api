@@ -7,10 +7,12 @@ from . import company
 from . import profile
 from . import viewProfile
 from . import companyinfo
+from . import userinfo
 from . import profileStatus
 from . import companyStatus
 from . import dashboard
 from . import companyKind
+from . import logActivity
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -32,4 +34,8 @@ def configure_query(app):
     register_view(companyKind.CompanyKindQuery)
     #Company info 
     register_view(companyinfo.CompanyinfoQuery)
+    #user info
+    register_view(userinfo.UserinfoQuery)
+    #activity log
+    register_view(logActivity.ActivityQuery)
     
