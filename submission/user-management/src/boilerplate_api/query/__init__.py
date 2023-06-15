@@ -13,6 +13,7 @@ from . import companyStatus
 from . import dashboard
 from . import companyKind
 from . import logActivity
+from . import officialRole
 def configure_query(app):
     register_view = register_resource(
         app,
@@ -38,4 +39,6 @@ def configure_query(app):
     register_view(userinfo.UserinfoQuery)
     #activity log
     register_view(logActivity.ActivityQuery)
+    #official role
+    register_view(officialRole.OfficialRoleQuery)
     

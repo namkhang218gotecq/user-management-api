@@ -37,7 +37,7 @@ async def handle_create_user(aggproxy, cmd: CreateUserData):
             "resource": cmd.aggroot.resource,
             "namespace": config.BOILERPLATE_API_DOMAIN,
         },
-        message=f"create user with email <b>{event_data.username}</b>",
+        message=f"create user with email {event_data.username}",
         msglabel="create-user",
     )
 # Update user
@@ -66,7 +66,20 @@ class UpdateUser(Command):
 async def handle_update_user(aggproxy, cmd: UpdateUserData):
     event = await aggproxy.update_user(cmd.data)
     yield event
-    
+    # print("EVENT:"  + str(event))
+    # print("EVENT ID:", event._id)
+    # print("AGGROOT:", event.aggroot)
+    # print("TARGET:", event.target)
+    # print("DATA:", event.data)
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Update user with username: {event.data.username}",
+        msglabel="update-user",
+    )
 # Deactivate account
 @_entity
 class DeactivateAccount(Command):
@@ -87,7 +100,7 @@ class DeactivateAccount(Command):
                 },
             }
         ]
-        
+    
 @_handler(DeactivateAccount)
 async def handle_deactivate_account(aggproxy, cmd: UpdateStatusAccountData):
     profile_list = await aggproxy.state.find(
@@ -109,7 +122,21 @@ async def handle_deactivate_account(aggproxy, cmd: UpdateStatusAccountData):
     
     event = await aggproxy.deactivate_account(cmd.data)
     yield event
-
+    
+    #log activity
+    account = await aggproxy.state.fetch("user", cmd.aggroot.identifier)
+    username = account.username
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Deactivated account: {username}",
+        msglabel="deactivate-account",
+    )
+    
 # Activate account
 @_entity
 class ActivateAccount(Command):
@@ -148,13 +175,22 @@ async def handle_activate_account(aggproxy, cmd: UpdateStatusAccountData):
         )
         event_status_user = await aggproxy.update_profile(UpdateProfileData(status = combine_profile_status("ACTIVE", company.status), _id = profile._id))
         yield event_status_user
-    
-    
-    
     event = await aggproxy.activate_account(cmd.data)
     yield event
     
+    # Fetch ra account co _id trung voi identifier, sau do lay ra username de log activity.
+    account = await aggproxy.state.fetch("user", cmd.aggroot.identifier)
+    username = account.username
     
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Activated account: {username}",
+        msglabel="activate-account",
+    )
     
     
 #Create system role 
@@ -194,11 +230,22 @@ async def handle_create_company(aggproxy, cmd: CreateCompany):
             pclass=cmd.data, _id=UUID_GENR(), status = "ACTIVE"
         )
     event = await aggproxy.create_company(event_data)
+    print("EVENT_DATA: " + str(event_data))
     yield event
     yield aggproxy.create_response(
         "company-response", cmd, {"_id": event.data._id}
     )
-
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"create company with company name: {event_data.company_name}",
+        msglabel="create-company",
+    )
+    
 # Update company
 @_entity
 class UpdateCompany(Command):
@@ -225,7 +272,18 @@ class UpdateCompany(Command):
 async def handle_update_company(aggproxy, cmd: UpdateCompanyData):
     event = await aggproxy.update_company(cmd.data)
     yield event
-
+    
+    company = await aggproxy.state.fetch("company", cmd.aggroot.identifier)
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"update company with company name: {company.company_name}",
+        msglabel="update-company",
+    )
 # Deactivate company
 @_entity
 class DeactivateCompany(Command):
@@ -268,6 +326,21 @@ async def handle_deactivate_company(aggproxy, cmd: UpdateStatusCompanyData):
     
     event = await aggproxy.deactivate_company(cmd.data)
     yield event
+    
+    #log activity
+    company = await aggproxy.state.fetch("company", cmd.aggroot.identifier)
+    company_name = company.company_name
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Deactivated company: {company_name}",
+        msglabel="deactivate-company",
+    )
+
 
 # Activate company
 @_entity
@@ -312,6 +385,19 @@ async def handle_activate_company(aggproxy, cmd: UpdateStatusCompanyData):
     event = await aggproxy.activate_company(cmd.data)
     yield event
 
+    #log activity
+    company = await aggproxy.state.fetch("company", cmd.aggroot.identifier)
+    company_name = company.company_name
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Activated company: {company_name}",
+        msglabel="activate-company",
+    )
 
 # Create profile
 
@@ -340,7 +426,32 @@ async def handle_create_profile(aggproxy, cmd: CreateProfileData):
     yield aggproxy.create_response(
         "profile-response", cmd, {"_id": event.data._id}
     )
+# remove company member
+@_entity
+class RemoveProfile(Command):
+    pass
     
+    class Meta:
+        resource = "profile/{id}"
+        tags = ["profile"]
+        description = "Remove company member"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Profile ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+    
+@_handler(RemoveProfile)
+async def handle_remove_profile(aggproxy, cmd: RemoveProfile):
+    event = await aggproxy.remove_profile()
+    yield event   
+
 
 # Update profile
 @_entity
@@ -398,6 +509,20 @@ async def handle_suspend_profile(aggproxy, cmd: UpdateStatusProfileData):
     event = await aggproxy.suspend_profile(cmd.data)
     yield event
 
+    #log activity
+    profile = await aggproxy.state.fetch("profile", cmd.aggroot.identifier)
+    account = await aggproxy.state.fetch("user", profile.account_id)
+    username = account.username
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Suspended profile: {username}",
+        msglabel="suspend-profile",
+    )
 
 # active profile
 
@@ -425,7 +550,22 @@ class ActiveProfile(Command):
 async def handle_active_profile(aggproxy, cmd: UpdateStatusProfileData):
     event = await aggproxy.active_profile(cmd.data)
     yield event   
-
+    
+    #log activity
+    profile = await aggproxy.state.fetch("profile", cmd.aggroot.identifier)
+    account = await aggproxy.state.fetch("user", profile.account_id)
+    username = account.username
+    
+    yield aggproxy.log_activity(
+        logroot={
+            "identifier": cmd.aggroot.identifier,
+            "resource": cmd.aggroot.resource,
+            "namespace": config.BOILERPLATE_API_DOMAIN,
+        },
+        message=f"Actived profile: {username}",
+        msglabel="activate-profile",
+    )
+    
 
 # Add user to company role
 @_entity("add-companyrole") 

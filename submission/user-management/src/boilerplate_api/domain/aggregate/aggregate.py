@@ -26,7 +26,6 @@ class UserAggregate(Aggregate):
         updated_user = {
             "username": data.username,
             "password": data.password,
-            "status": data.status
         }
 
         return self.create_event(
@@ -34,8 +33,7 @@ class UserAggregate(Aggregate):
             target=self.aggroot,
             data=UpdateUserEventData(
                 username=updated_user["username"],
-                password=updated_user["password"],
-                status= updated_user["status"]
+                password=updated_user["password"]
             )
         )
     async def do__update_user_status(
@@ -166,7 +164,14 @@ class ProfileAggregate(Aggregate):
                 pclass=data
             )
         )
-    
+    async def do__remove_profile(
+        self
+    )-> Event:
+        
+        return self.create_event(
+            "profile-deleted",  target={"resource": self.aggroot.resource, "identifier": self.aggroot.identifier}
+        )        
+        
     async def do__suspend_profile(self, data: UpdateStatusProfileData) -> Event:
         profile = await self.fetch_aggroot()
 

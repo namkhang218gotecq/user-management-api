@@ -20,11 +20,10 @@ class CreateUserData(CommandData):
             raise ValueError("Vui lòng nhập định dạng email hợp lệ!")
 
     def validate_password(password):
-        if len(password) >= 8:
+        if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
             return password
         else:
-            raise ValueError("Mật khẩu phải chứa ít nhất 8 chữ cái")
-
+            raise ValueError("Mật khẩu phải chứa ít nhất 8 chữ cái và ít nhất một chữ cái hoa và một chữ số")
     username = field(
         type=str,
         mandatory=True,
@@ -46,11 +45,10 @@ class CreateUserEventData(EventData):
 class UpdateUserData(CommandData):
     username = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)
-    status = field(type=str, mandatory=True)
 class UpdateUserEventData(EventData):
     username = field(type=nullable(str))
     password = field(type=nullable(str))
-    status = field(type=nullable(str))  
+    
     
 #----------------------------------------------------------------
 

@@ -200,6 +200,14 @@ async def process__remove_role(statemgr, event):
     yield InvalidateRecord(resource=event.target.resource, identifier=event.target.identifier)
 
 
+@_entity("profile-deleted")
+class RemoveProfile(Event):
+    pass
+
+@_committer(RemoveProfile)
+async def process__remove_profile(statemgr, event):
+    yield InvalidateRecord(resource=event.target.resource, identifier=event.target.identifier)
+
 
 
 
