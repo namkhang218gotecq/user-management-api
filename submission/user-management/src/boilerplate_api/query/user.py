@@ -5,7 +5,7 @@ from sanic_query.resource import QueryResource
 class UserQueryResource(QueryResource):
 
     _id = f.StringField("ID", identifier=True)
-    username = f.StringField("username")
+    telecom__email = f.StringField("telecom__email")
     password = f.StringField("password")
     status = f.EnumField("")
     _deleted = f.StringField("Deleted")

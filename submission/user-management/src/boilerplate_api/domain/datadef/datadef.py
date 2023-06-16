@@ -6,7 +6,7 @@ from fii_cqrs.event import EventData
 from fii_cqrs.helper import nullable
 from fii_cqrs.identifier import UUID_TYPE
 from datetime import date, datetime
-
+from boilerplate_api.model.model import ProfileStatus, AccountStatus, CompanyStatus
 import re
 
 
@@ -40,13 +40,14 @@ class CreateUserEventData(EventData):
 
     telecom__email = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)
-    status = field(type=str, mandatory=True)
+    # status = field(type=str, mandatory=True)
+    status = field(type=AccountStatus, factory=AccountStatus)
 
 class UpdateUserData(CommandData):
-    username = field(type=str, mandatory=True)
+    telecom__email = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)
 class UpdateUserEventData(EventData):
-    username = field(type=nullable(str))
+    telecom__email = field(type=str, mandatory=True)
     password = field(type=nullable(str))
     
     
@@ -87,7 +88,11 @@ class CreateCompanyData(CommandData):
 class CreateCompanyEventData(CommandData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     
-    status = field(nullable(str))  
+    status = field(
+        type=CompanyStatus,
+        factory=CompanyStatus,
+    ) 
+    # status = field(nullable(str))
     kind = field(nullable(str))  
     company_name = field(nullable(str))
     telecom__email = field(nullable(str))
@@ -104,7 +109,8 @@ class CreateCompanyEventData(CommandData):
 #Update company
 
 class UpdateCompanyData(CommandData):
-    status = field(type=nullable(str))  
+    status = field(type=nullable(CompanyStatus)) 
+    # status = field(type=nullable(str))   
     kind = field(type=str)  
     company_name = field(type=str)
     telecom__email = field(type=str)
@@ -119,7 +125,8 @@ class UpdateCompanyData(CommandData):
     npi = field(type=str)
     
 class UpdateCompanyEventData(CommandData):
-    status = field(type=nullable(str))  
+    status = field(type=nullable(CompanyStatus))  
+    # status = field(type=nullable(str))  
     kind = field(type=nullable(str))  
     company_name = field(type=nullable(str))
     telecom__email = field(type=nullable(str))
@@ -135,11 +142,16 @@ class UpdateCompanyEventData(CommandData):
     
 # Create profile 
 class CreateProfileData(CommandData):
-    account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
+    # account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     name__family = field(type=str, mandatory=True)
     name__given = field(type=str, mandatory=True)
     telecom__email = field(type=nullable(str))
+    # từ telecom__email: đi tìm account có telecom__email trùng
+    # TH1: Nếu không tìm thấy account có email đó
+    # Thì tạo account trước, gắn account id vào profile
+    # Th2: Nếu tìm thấy account có email đó
+    # Tìm được account id, tạo profile rồi gắn account vào
     telecom__phone = field(type=nullable(str))
     address__postal = field(type=nullable(str))
     address__state = field(type=nullable(str))
@@ -157,7 +169,8 @@ class CreateProfileEventData(CommandData):
     
     account_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
-    status = field(type=str, mandatory=True)
+    status = field(type=ProfileStatus, factory=ProfileStatus)
+    # status = field(type=str, mandatory=True)
     name__family = field(type=str, mandatory=True)
     name__given = field(type=str, mandatory=True)
     telecom__email = field(type=nullable(str))
@@ -178,7 +191,8 @@ class UpdateProfileData(CommandData):
     # FIX: Change name or validate another way
     # Expect: remove field _i
     _id = field(type=UUID_TYPE, factory=to_uuid)
-    status = field(type=nullable(str))
+    status = field(type=ProfileStatus, factory=ProfileStatus)
+    # status = field(type=nullable(str))
     name__family = field(type=nullable(str))
     name__given = field(type=nullable(str))
     telecom__email = field(type=nullable(str))
@@ -194,14 +208,32 @@ class UpdateProfileData(CommandData):
     name__middle = field(type=nullable(str))
     avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
 
-# class c(CommandData):
+class UpdateProfileInfoData(CommandData):
+    status = field(type=nullable(ProfileStatus))
+    # status = field(type=nullable(str))
+    name__family = field(type=nullable(str))
+    name__given = field(type=nullable(str))
+    telecom__email = field(type=nullable(str))
+    telecom__phone = field(type=nullable(str))
+    address__postal = field(type=nullable(str))
+    address__state = field(type=nullable(str))
+    address__country = field(type=nullable(str))
+    address__line = field(type=nullable(str))
+    gender = field(type=nullable(str))
+    birth_date = field(type=nullable(datetime))
+    name__suffix = field(type=nullable(str))
+    name__prefix = field(type=nullable(str))
+    name__middle = field(type=nullable(str))
+    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+# class UpdateStatusProfileData(CommandData):
 #     status = field(type=(str))
 #     user_id = field(type=UUID_TYPE, factory=to_uuid)
 
 
 class UpdateProfileEventData(CommandData):
     
-    status = field(type=nullable(str))
+    status = field(type=nullable(ProfileStatus))
+    # status = field(type=nullable(str))
     name__family = field(type=nullable(str))
     name__given = field(type=nullable(str))
     telecom__email = field(type=nullable(str))
@@ -222,20 +254,20 @@ class UpdateStatusProfileData(CommandData):
     pass
     
 class UpdateStatusEventProfile(CommandData):
-    status = field(type=(str))
+    status = field(type=ProfileStatus, factory=ProfileStatus)
 
 class UpdateStatusAccountData(CommandData):
-    status = field(type=(str))
+    status = field(type=AccountStatus, factory=AccountStatus)
 
 class UpdateStatusAccountEvent(CommandData):
-    status = field(type=(str))
+    status = field(type=AccountStatus, factory=AccountStatus)
 
 class UpdateStatusCompanyData(CommandData):
     pass
 
 class UpdateStatusCompanyEvent(CommandData):
-    status = field(type=(str))
-    
+    status = field(type=CompanyStatus, factory=CompanyStatus)
+    # status = field(type=(str))
 # company-profile
 
 class CompanyRoleData(CommandData):

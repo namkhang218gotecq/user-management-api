@@ -3,9 +3,9 @@ from fii_cqrs.event import Event
 from fii_cqrs.identifier import UUID_GENR
 
 from boilerplate_api.domain.datadef import   CreateUserData,UpdateUserData,CreateSystemRoleData,CreateCompanyData,UpdateCompanyData, CreateProfileData, UpdateProfileData,UpdateStatusProfileData,UpdateStatusAccountData # noqa
-from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleData,CompanyRoleEventData ,UpdateStatusCompanyEvent,UpdateStatusCompanyData # noqa
+from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventData, CreateSystemRoleEventData,CreateCompanyEventData, UpdateCompanyEventData, CreateProfileEventData, UpdateProfileEventData, UpdateStatusEventProfile,UpdateStatusAccountEvent,CompanyRoleData,CompanyRoleEventData ,UpdateStatusCompanyEvent,UpdateStatusCompanyData,UpdateProfileInfoData # noqa
 
-from boilerplate_api.model import StatusEnum
+from boilerplate_api.model.model import AccountStatus,CompanyStatus,ProfileStatus
 
 
 # user
@@ -27,7 +27,7 @@ class UserAggregate(Aggregate):
         user = await self.fetch_aggroot()
 
         updated_user = {
-            "username": data.username,
+            "telecom__email": data.telecom__email,
             "password": data.password,
         }
 
@@ -35,7 +35,7 @@ class UserAggregate(Aggregate):
             "user-updated",
             target=self.aggroot,
             data=UpdateUserEventData(
-                username=updated_user["username"],
+                telecom__email=updated_user["telecom__email"],
                 password=updated_user["password"]
             )
         )
@@ -56,16 +56,17 @@ class UserAggregate(Aggregate):
     async def do__deactivate_account(self, data: UpdateStatusAccountData) -> Event:
         account = await self.fetch_aggroot()
 
-        if account.status == "INACTIVE":
+        if account.status == AccountStatus.INACTIVE:
             raise ValueError("The current account is INACTIVE. Please enter another account id.")
         
         return self.create_event(
             "deactivated-account",
             target=self.aggroot, 
             data=UpdateStatusAccountEvent(
-                status="INACTIVE",
+                status=AccountStatus.INACTIVE,
             )
     )
+        
 # Activate account
     async def do__activate_account(self, data: UpdateStatusAccountData) -> Event:
         account = await self.fetch_aggroot()
@@ -77,7 +78,7 @@ class UserAggregate(Aggregate):
             "activated-account",
             target=self.aggroot, 
             data=UpdateStatusAccountEvent(
-                status="ACTIVE",
+                status=AccountStatus.ACTIVE,
             )
     )
 #System role
@@ -126,7 +127,7 @@ class CompanyAggregate(Aggregate):
             "deactivated-company",
             target=self.aggroot, 
             data=UpdateStatusCompanyEvent(
-                status="INACTIVE",
+                status=CompanyStatus.INACTIVE,
             )
     )
 # Activate company
@@ -156,7 +157,17 @@ class ProfileAggregate(Aggregate):
         )
     
    
-    async def do__update_profile(self, data: UpdateProfileData) -> Event:
+    async def do__update_profile(self, data: UpdateProfileInfoData) -> Event:
+        return self.create_event(
+            "profile-updated",
+            target= self.aggroot,
+            data=UpdateProfileEventData.extend_pclass(
+                pclass=data
+            )
+        )
+        
+    async def do__update_profile_status(self, data: UpdateProfileData) -> Event:
+        
         return self.create_event(
             "profile-updated",
             target= {
@@ -168,7 +179,6 @@ class ProfileAggregate(Aggregate):
             )
         )
         
-    # async def do__update_profile_status() -> Event
     async def do__remove_profile(
         self
     )-> Event:
@@ -185,13 +195,14 @@ class ProfileAggregate(Aggregate):
         elif profile.status == "DEACTIVATED":
             raise ValueError("The current profile is DEACTIVATED. Please enter another profile id.")
         elif profile.status == "COMPANY_DEACTIVATED":
-            raise ValueError("The current company is deactivated. Please enter another profile id.")
+            raise ValueError("The current profile is COMPANY_DEACTIVATED. Please enter another profile id.")
         else:
             return self.create_event(
                 "profile-suspended",
                 target=self.aggroot, 
                 data=UpdateStatusEventProfile(
-                    status="INACTIVE",
+                    # status = "INACTIVE",
+                    status=ProfileStatus.INACTIVE
                 )
             )
 

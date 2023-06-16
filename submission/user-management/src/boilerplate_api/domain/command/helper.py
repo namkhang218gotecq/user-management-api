@@ -1,29 +1,31 @@
 
+from boilerplate_api.model.model import AccountStatus,CompanyStatus,ProfileStatus
 
-def combine_profile_status(account_status: str, company_status: str) -> str:
+
+def combine_profile_status(account_status, company_status) -> str:
     from fii import logger
     logger.warning("Account status --> %s", account_status)
     logger.warning("Company status --> %s", company_status)
     status_mapping = {
-        ("ACTIVE", "SETUP"): "ACTIVE",
-        ("ACTIVE", "REVIEW"): "ACTIVE",
-        ("ACTIVE", "INACTIVE"): "COMPANY_DEACTIVATED",
-        ("ACTIVE", "ACTIVE"): "ACTIVE",
+        (AccountStatus.ACTIVE, CompanyStatus.SETUP): ProfileStatus.ACTIVE,
+        (AccountStatus.ACTIVE, CompanyStatus.REVIEW): ProfileStatus.ACTIVE,
+        (AccountStatus.ACTIVE, CompanyStatus.INACTIVE): ProfileStatus.COMPANY_DEACTIVATED,
+        (AccountStatus.ACTIVE, CompanyStatus.ACTIVE): ProfileStatus.ACTIVE,
         
-        ("INACTIVE", "SETUP"): "INACTIVE",
-        ("INACTIVE", "REVIEW"): "INACTIVE",
-        ("INACTIVE", "INACTIVE"): "DEACTIVATED",
-        ("INACTIVE", "ACTIVE"): "DEACTIVATED",
+        (AccountStatus.INACTIVE, CompanyStatus.SETUP): ProfileStatus.INACTIVE,
+        (AccountStatus.INACTIVE, CompanyStatus.REVIEW): ProfileStatus.INACTIVE,
+        (AccountStatus.INACTIVE, CompanyStatus.INACTIVE): ProfileStatus.DEACTIVATED,
+        (AccountStatus.INACTIVE, CompanyStatus.ACTIVE): ProfileStatus.DEACTIVATED,
         
-        ("EXPIRED", "SETUP"): "EXPIRED",
-        ("EXPIRED", "REVIEW"): "EXPIRED",
-        ("EXPIRED", "INACTIVE"): "EXPIRED",
-        ("EXPIRED", "ACTIVE"): "EXPIRED",
+        (AccountStatus.EXPIRED, CompanyStatus.SETUP): ProfileStatus.EXPIRED,
+        (AccountStatus.EXPIRED, CompanyStatus.REVIEW): ProfileStatus.EXPIRED,
+        (AccountStatus.EXPIRED, CompanyStatus.INACTIVE): ProfileStatus.EXPIRED,
+        (AccountStatus.EXPIRED, CompanyStatus.ACTIVE): ProfileStatus.EXPIRED,
         
-        ("PENDING", "SETUP"): "PENDING",
-        ("PENDING", "REVIEW"): "PENDING",
-        ("PENDING", "INACTIVE"): "COMPANY_DEACTIVATED",
-        ("PENDING", "ACTIVE"): "PENDING"
+        (AccountStatus.PENDING, CompanyStatus.SETUP): ProfileStatus.PENDING,
+        (AccountStatus.PENDING, CompanyStatus.REVIEW): ProfileStatus.PENDING,
+        (AccountStatus.PENDING, CompanyStatus.INACTIVE): ProfileStatus.COMPANY_DEACTIVATED,
+        (AccountStatus.PENDING, CompanyStatus.ACTIVE): ProfileStatus.PENDING
     }
     
-    return status_mapping.get((account_status, company_status), "UNKNOWN")
+    return status_mapping.get((account_status, company_status))

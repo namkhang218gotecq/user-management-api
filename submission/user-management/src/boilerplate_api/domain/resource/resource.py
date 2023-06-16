@@ -9,7 +9,7 @@ from datetime import date, datetime
 from boilerplate_api.model import   UserModel ,SystemRoleModel, CompanyModel, ProfileModel,CompanyRoleModel
 
 
-
+from boilerplate_api.model.model import CompanyStatus, ProfileStatus, AccountStatus
 
     
 #----------------------------------------------------------------
@@ -20,7 +20,8 @@ class UserResource(PostgresCqrsResource):
     _id = field(type=UUID_TYPE)
     telecom__email = field(type=nullable(str))
     password = field(type=str)
-    status = field(type=str)
+    # status = field(type=str)
+    status = field(type=AccountStatus)
     
 #----------------------------------------------------------------
 @cr.register("system-role")
@@ -40,7 +41,8 @@ class CompanyResource(PostgresCqrsResource):
     __backend__ = CompanyModel
 
     _id = field(type=UUID_TYPE)
-    status = field(type=nullable(str))
+    # status = field(type=nullable(str))
+    status = field(type=nullable(CompanyStatus))
     kind = field(type=nullable(str))
     company_name = field(type=nullable(str))
     telecom__email = field(type=nullable(str))
@@ -63,7 +65,8 @@ class ProfileResource(PostgresCqrsResource):
     
     account_id = field(type=UUID_TYPE)
     company_id = field(type=UUID_TYPE)
-    status = field(type=str, mandatory=True)
+    # status = field(type=str, mandatory=True)
+    status = field(type=ProfileStatus, factory=ProfileStatus)
     name__family = field(type=str, mandatory=True)
     name__given = field(type=str, mandatory=True)
     telecom__email = field(type=nullable(str))

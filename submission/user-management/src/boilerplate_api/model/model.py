@@ -4,6 +4,25 @@ from fii_cqrs.backend.gino import GinoBaseModel, db
 from enum import Enum
 from boilerplate_api import config
 
+class ProfileStatus(Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    COMPANY_DEACTIVATED = "COMPANY_DEACTIVATED"
+    PENDING = "PENDING"
+    EXPIRED = "EXPIRED"
+    DEACTIVATED = "DEACTIVATED"
+    
+class AccountStatus(Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    EXPIRED = "EXPIRED"
+    PENDING = "PENDING"
+
+class CompanyStatus(Enum):
+    SETUP = "SETUP"
+    REVIEW = "REVIEW"
+    INACTIVE = "INACTIVE"
+    ACTIVE = "ACTIVE"
 
 class UserModel(GinoBaseModel):
     __tablename__ = "account"
@@ -12,7 +31,8 @@ class UserModel(GinoBaseModel):
     _id = db.Column(UUID, primary_key=True)
     telecom__email = db.Column(db.String)
     password = db.Column(db.String)
-    status = db.Column(db.String)
+    # status = db.Column(db.String)
+    status = db.Column(db.Enum(AccountStatus))
     
 class SystemRoleModel(GinoBaseModel):
     __tablename__ = "system-role"
@@ -31,7 +51,8 @@ class CompanyModel(GinoBaseModel):
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
     
     _id = db.Column(UUID, primary_key=True)
-    status = db.Column(db.String)
+    # status = db.Column(db.String)
+    status = db.Column(db.Enum(CompanyStatus))
     kind = db.Column(db.String)
     company_name = db.Column(db.String)
     telecom__email = db.Column(db.String)
@@ -45,14 +66,8 @@ class CompanyModel(GinoBaseModel):
     company_code = db.Column(db.String)
     npi = db.Column(db.String)
 
-class StatusEnum(Enum):
-    ACTIVE = "ACTIVE"
-    INACTIVE = "INACTIVE"
-    PENDING = "PENDING"
-    EXPIRED = "EXPIRED"
-    COMPANY_DEACTIVATED = "COMPANY_DEACTIVATED"
-    DEACTIVATED = "DEACTIVATED"
 
+    
 class ProfileModel(GinoBaseModel):
     __tablename__ = "profile"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
@@ -60,7 +75,9 @@ class ProfileModel(GinoBaseModel):
     _id = db.Column(UUID, primary_key=True)
     account_id = db.Column(UUID)
     company_id = db.Column(UUID)
-    status = db.Column(db.String)
+    status = db.Column(db.Enum(ProfileStatus))
+    # status = db.Column(db.String)
+
     name__family = db.Column(db.String)
     name__given = db.Column(db.String)
     telecom__email = db.Column(db.String)
