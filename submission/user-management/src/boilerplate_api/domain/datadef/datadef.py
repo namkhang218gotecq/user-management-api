@@ -17,14 +17,14 @@ class CreateUserData(CommandData):
         if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
             return email
         else:
-            raise ValueError("Vui lòng nhập định dạng email hợp lệ!")
+            raise ValueError("Please enter a valid email format!")
 
     def validate_password(password):
         if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
             return password
         else:
-            raise ValueError("Mật khẩu phải chứa ít nhất 8 chữ cái và ít nhất một chữ cái hoa và một chữ số")
-    username = field(
+            raise ValueError("Password must contain at least 8 letters and at least 1 UPPERCASE letter and 1 NUMBER")
+    telecom__email = field(
         type=str,
         mandatory=True,
         factory=validate_username
@@ -38,7 +38,7 @@ class CreateUserData(CommandData):
 class CreateUserEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
 
-    username = field(type=str, mandatory=True)
+    telecom__email = field(type=str, mandatory=True)
     password = field(type=str, mandatory=True)
     status = field(type=str, mandatory=True)
 
@@ -146,11 +146,10 @@ class CreateProfileData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=str)
-    birth_date = field(type=datetime)
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
-    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    # avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
     
     
 class CreateProfileEventData(CommandData):
@@ -168,18 +167,17 @@ class CreateProfileEventData(CommandData):
     address__country = field(type=nullable(str))
     address__line = field(type=nullable(str))
     gender = field(type=str)
-    birth_date = field(type=nullable(datetime))
     name__suffix = field(type=nullable(str))
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
-    avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
+    # avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
     
 # Update profile
 
 class UpdateProfileData(CommandData):
-    
+    # FIX: Change name or validate another way
+    # Expect: remove field _i
     _id = field(type=UUID_TYPE, factory=to_uuid)
-    
     status = field(type=nullable(str))
     name__family = field(type=nullable(str))
     name__given = field(type=nullable(str))
@@ -195,8 +193,14 @@ class UpdateProfileData(CommandData):
     name__prefix = field(type=nullable(str))
     name__middle = field(type=nullable(str))
     avatar = field(type=nullable(UUID_TYPE), factory=to_uuid)
-    
+
+# class c(CommandData):
+#     status = field(type=(str))
+#     user_id = field(type=UUID_TYPE, factory=to_uuid)
+
+
 class UpdateProfileEventData(CommandData):
+    
     status = field(type=nullable(str))
     name__family = field(type=nullable(str))
     name__given = field(type=nullable(str))
@@ -221,7 +225,7 @@ class UpdateStatusEventProfile(CommandData):
     status = field(type=(str))
 
 class UpdateStatusAccountData(CommandData):
-    pass
+    status = field(type=(str))
 
 class UpdateStatusAccountEvent(CommandData):
     status = field(type=(str))
@@ -237,7 +241,6 @@ class UpdateStatusCompanyEvent(CommandData):
 class CompanyRoleData(CommandData):
     
     profile_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
-    company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     role_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
 class CompanyRoleEventData(CommandData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)

@@ -1,19 +1,29 @@
 
 
 def combine_profile_status(account_status: str, company_status: str) -> str:
+    from fii import logger
+    logger.warning("Account status --> %s", account_status)
+    logger.warning("Company status --> %s", company_status)
     status_mapping = {
-        ("SETUP", "SETUP"): "SETUP",
-        ("SETUP", "REVIEW"): "SETUP",
-        ("REVIEW", "SETUP"): "SETUP",
-        ("REVIEW", "REVIEW"): "REVIEW",
-        ("PENDING", "ACTIVE"): "PENDING",
-        ("PENDING", "INACTIVE"): "COMPANY_DEACTIVATED",
-        ("EXPIRED", "ACTIVE"): "EXPIRED",
-        ("EXPIRED", "INACTIVE"): "EXPIRED",
-        ("ACTIVE", "ACTIVE"): "ACTIVE",
+        ("ACTIVE", "SETUP"): "ACTIVE",
+        ("ACTIVE", "REVIEW"): "ACTIVE",
         ("ACTIVE", "INACTIVE"): "COMPANY_DEACTIVATED",
-        ("INACTIVE", "ACTIVE"): "DEACTIVATED",
+        ("ACTIVE", "ACTIVE"): "ACTIVE",
+        
+        ("INACTIVE", "SETUP"): "INACTIVE",
+        ("INACTIVE", "REVIEW"): "INACTIVE",
         ("INACTIVE", "INACTIVE"): "DEACTIVATED",
+        ("INACTIVE", "ACTIVE"): "DEACTIVATED",
+        
+        ("EXPIRED", "SETUP"): "EXPIRED",
+        ("EXPIRED", "REVIEW"): "EXPIRED",
+        ("EXPIRED", "INACTIVE"): "EXPIRED",
+        ("EXPIRED", "ACTIVE"): "EXPIRED",
+        
+        ("PENDING", "SETUP"): "PENDING",
+        ("PENDING", "REVIEW"): "PENDING",
+        ("PENDING", "INACTIVE"): "COMPANY_DEACTIVATED",
+        ("PENDING", "ACTIVE"): "PENDING"
     }
     
     return status_mapping.get((account_status, company_status), "UNKNOWN")

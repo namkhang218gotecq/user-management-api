@@ -17,7 +17,10 @@ class UserAggregate(Aggregate):
         return self.create_event(
             "user-created", target=self.aggroot, data=data
         )
-        
+    
+    
+    
+    
     async def do__update_user(
         self, data: UpdateUserData
     ) -> Event:
@@ -54,7 +57,7 @@ class UserAggregate(Aggregate):
         account = await self.fetch_aggroot()
 
         if account.status == "INACTIVE":
-            raise ValueError("Profile hiện tại đã INACTIVE. Vui lòng nhập 1 id account khác.")
+            raise ValueError("The current account is INACTIVE. Please enter another account id.")
         
         return self.create_event(
             "deactivated-account",
@@ -68,7 +71,7 @@ class UserAggregate(Aggregate):
         account = await self.fetch_aggroot()
 
         if account.status == "ACTIVE":
-            raise ValueError("Profile hiện tại đã ACTIVE. Vui lòng nhập 1 id account khác.")
+            raise ValueError("The current account is ACTIVE. Please enter another account id.")
         
         return self.create_event(
             "activated-account",
@@ -117,7 +120,7 @@ class CompanyAggregate(Aggregate):
         company = await self.fetch_aggroot()
 
         if company.status == "INACTIVE":
-            raise ValueError("Company hiện tại đã INACTIVE. Vui lòng nhập 1 id company khác.")
+            raise ValueError("The current company is INACTIVE. Please enter another company id.")
         
         return self.create_event(
             "deactivated-company",
@@ -131,7 +134,7 @@ class CompanyAggregate(Aggregate):
         company = await self.fetch_aggroot()
 
         if company.status == "ACTIVE":
-            raise ValueError("Company hiện tại đã ACTIVE. Vui lòng nhập 1 id company khác.")
+            raise ValueError("The current company is ACTIVE. Please enter another company id.")
         
         return self.create_event(
             "activated-company",
@@ -164,6 +167,8 @@ class ProfileAggregate(Aggregate):
                 pclass=data
             )
         )
+        
+    # async def do__update_profile_status() -> Event
     async def do__remove_profile(
         self
     )-> Event:
@@ -176,20 +181,25 @@ class ProfileAggregate(Aggregate):
         profile = await self.fetch_aggroot()
 
         if profile.status == "INACTIVE":
-            raise ValueError("Profile hiện tại đã INACTIVE. Vui lòng nhập 1 id profile khác.")
-        
-        return self.create_event(
-            "profile-suspended",
-            target=self.aggroot, 
-            data=UpdateStatusEventProfile(
-                status="INACTIVE",
+            raise ValueError("The current profile is INACTIVE. Please enter another profile id.")
+        elif profile.status == "DEACTIVATED":
+            raise ValueError("The current profile is DEACTIVATED. Please enter another profile id.")
+        elif profile.status == "COMPANY_DEACTIVATED":
+            raise ValueError("The current company is deactivated. Please enter another profile id.")
+        else:
+            return self.create_event(
+                "profile-suspended",
+                target=self.aggroot, 
+                data=UpdateStatusEventProfile(
+                    status="INACTIVE",
+                )
             )
-    )
+
     async def do__active_profile(self, data: UpdateStatusProfileData) -> Event:
         profile = await self.fetch_aggroot()
 
         if profile.status == "ACTIVE":
-            raise ValueError("Profile hiện tại đã ACTIVE. Vui lòng nhập 1 id profile khác.")
+            raise ValueError("The current profile is ACTIVE. Please enter another profile id.")
         
         return self.create_event(
             "profile-active",
@@ -206,10 +216,17 @@ class CompanyRoleAggregate(Aggregate):
         self, data: CompanyRoleData
     ) -> Event:
         event_data = CompanyRoleEventData.extend_pclass(
-            pclass=data, _id=UUID_GENR()
+            pclass=data, _id=UUID_GENR(), company_id=self.aggroot.identifier
         )
+        from fii import logger
+        logger.warning("Company profile ID --> %s", event_data._id)
         return self.create_event(
-            "role-created", target=self.aggroot, data=event_data
+            "role-created", 
+            target={
+                "resource": "company-profile",
+                "identifier": event_data._id
+            },
+            data=event_data
         )
 
     async def do__remove_role(

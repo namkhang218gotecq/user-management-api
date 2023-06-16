@@ -18,7 +18,7 @@ class UserResource(PostgresCqrsResource):
     __backend__ = UserModel
 
     _id = field(type=UUID_TYPE)
-    username = field(type=str)
+    telecom__email = field(type=nullable(str))
     password = field(type=str)
     status = field(type=str)
     

@@ -10,7 +10,7 @@ class UserModel(GinoBaseModel):
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)
 
     _id = db.Column(UUID, primary_key=True)
-    username = db.Column(db.String)
+    telecom__email = db.Column(db.String)
     password = db.Column(db.String)
     status = db.Column(db.String)
     
@@ -52,7 +52,7 @@ class StatusEnum(Enum):
     EXPIRED = "EXPIRED"
     COMPANY_DEACTIVATED = "COMPANY_DEACTIVATED"
     DEACTIVATED = "DEACTIVATED"
-    
+
 class ProfileModel(GinoBaseModel):
     __tablename__ = "profile"
     __table_args__ = dict(schema=config.BOILERPLATE_SCHEMA)

@@ -146,7 +146,8 @@ async def process__profile_updated(statemgr, event):
     yield UpdateRecord(
         resource=event.target.resource, 
         data=event.data, 
-        identifier=event.target.identifier)
+        identifier=event.target.identifier
+    )
 
 #suspend profile
 @_entity('profile-suspended')
