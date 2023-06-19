@@ -4,9 +4,9 @@ from sanic_query.resource import QueryResource
 
 class UserInfoQueryResource(QueryResource):
     
-    _id = f.StringField("_id", identifier=True)
+    account_id = f.StringField("account_id")
     
-    profile_id = f.StringField("profile_id")
+    profile_id = f.StringField("profile_id", identifier=True)
     account_username = f.StringField("account_username")
     name__family = f.StringField("name__family")
     name__given = f.StringField("name__given")
@@ -39,11 +39,9 @@ class UserinfoQuery(UserInfoQueryResource):
                 "schema": {"type": "string"},
             },
         ]
-    # @classmethod
-    # def base_query(cls, parsed_query, user=None):
-    #     return {
-    #         "account_id": parsed_query.url_params["account_id"],
-    #     }
+    @classmethod
+    def base_query(cls, parsed_query, user=None):
+        return {
+            "account_id": parsed_query.url_params["account_id"],
+        }
         
-#  57341d6d-24dd-48fc-a61d-f678f459f238
-#  6daab2b4-40f0-4f11-967a-c5d0e8192097

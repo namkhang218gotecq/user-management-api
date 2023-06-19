@@ -108,7 +108,10 @@ class CreateCompanyEventData(CommandData):
 #Update company
 
 class UpdateCompanyData(CommandData):
-    status = field(type=nullable(CompanyStatus)) 
+    status = field(
+        type=CompanyStatus,
+        factory=CompanyStatus,
+    ) 
     # status = field(type=nullable(str))   
     kind = field(type=str)  
     company_name = field(type=str)
@@ -124,7 +127,10 @@ class UpdateCompanyData(CommandData):
     npi = field(type=str)
     
 class UpdateCompanyEventData(CommandData):
-    status = field(type=nullable(CompanyStatus))  
+    status = field(
+        type=CompanyStatus,
+        factory=CompanyStatus,
+    )  
     # status = field(type=nullable(str))  
     kind = field(type=nullable(str))  
     company_name = field(type=nullable(str))

@@ -5,8 +5,8 @@ from sanic_query.resource import QueryResource
 class CompanyInfoQueryResource(QueryResource):
 
     
-    company_id = f.UUIDField("company_id",  identifier=True)
-    profile_id = f.UUIDField("profile_id")
+    company_id = f.UUIDField("company_id")
+    profile_id = f.UUIDField("profile_id", identifier=True)
     company_name = f.StringField("company_name")
     name__family = f.StringField("name__family")
     name__given = f.StringField("name__given")
@@ -26,11 +26,25 @@ class CompanyInfoQueryResource(QueryResource):
 
 class CompanyinfoQuery(CompanyInfoQueryResource):
     __table__ =  "view--company-info"
+    __endpoint__ = "company/<company_id>/profile"
     
     class Meta:
         tags = ["query"]
         description = "Company info (Show users + role in these company)"
-    
+        parameters = [
+            {
+                "name": "company_id",
+                "in": "path",
+                "description": "Account ID",
+                "required": True,
+                "schema": {"type": "string"},
+            },
+        ]
+    @classmethod
+    def base_query(cls, parsed_query, user=None):
+        return {
+            "company_id": parsed_query.url_params["company_id"],
+        }
  
  
  

@@ -276,8 +276,7 @@ async def handle_update_company(aggproxy, cmd: UpdateCompany):
     event = await aggproxy.update_company(cmd.data)
     yield event
     
-    company = await aggproxy.state.fetch("company", cmd.aggroot.identifier)
-    
+    # company = await aggproxy.state.fetch("company", cmd.aggroot.identifier)
     # yield aggproxy.log_activity(
     #     logroot={
     #         "identifier": cmd.aggroot.identifier,
