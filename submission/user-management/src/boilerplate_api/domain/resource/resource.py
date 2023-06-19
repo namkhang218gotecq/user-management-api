@@ -19,7 +19,7 @@ class UserResource(PostgresCqrsResource):
 
     _id = field(type=UUID_TYPE)
     telecom__email = field(type=nullable(str))
-    password = field(type=str)
+    password = field(type=nullable(str))
     # status = field(type=str)
     status = field(type=AccountStatus)
     

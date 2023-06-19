@@ -8,14 +8,14 @@ from boilerplate_api.domain.datadef import  CreateUserEventData,UpdateUserEventD
 from boilerplate_api.model.model import AccountStatus,CompanyStatus,ProfileStatus
 
 
-# user
+# create user
 class UserAggregate(Aggregate):
     async def do__create_user(
         self, data: CreateUserEventData
     ) -> Event:
         
         return self.create_event(
-            "user-created", target=self.aggroot, data=data
+            "user-created", target={"resource": "user", "identifier": data._id}, data=data
         )
     
     

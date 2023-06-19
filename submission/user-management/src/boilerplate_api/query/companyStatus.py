@@ -10,7 +10,7 @@ class CompanyStatusQueryResource(QueryResource):
     
 
 class CompanyStatusQuery(CompanyStatusQueryResource):
-    __table__ =  "company-status-count"
+    __table__ =  "view--company-status"
     
     class Meta:
         tags = ["query"]

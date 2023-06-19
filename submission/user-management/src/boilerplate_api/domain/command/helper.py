@@ -4,8 +4,8 @@ from boilerplate_api.model.model import AccountStatus,CompanyStatus,ProfileStatu
 
 def combine_profile_status(account_status, company_status) -> str:
     from fii import logger
-    logger.warning("Account status --> %s", account_status)
-    logger.warning("Company status --> %s", company_status)
+    # logger.warning("Account status --> %s", account_status)
+    # logger.warning("Company status --> %s", company_status)
     status_mapping = {
         (AccountStatus.ACTIVE, CompanyStatus.SETUP): ProfileStatus.ACTIVE,
         (AccountStatus.ACTIVE, CompanyStatus.REVIEW): ProfileStatus.ACTIVE,

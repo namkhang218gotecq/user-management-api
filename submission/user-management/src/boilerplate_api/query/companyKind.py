@@ -10,7 +10,7 @@ class CompanyKindQueryResource(QueryResource):
     
 
 class CompanyKindQuery(CompanyKindQueryResource):
-    __table__ =  "company-kind-count"
+    __table__ =  "view--company-kind"
     
     class Meta:
         tags = ["query"]

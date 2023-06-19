@@ -19,29 +19,28 @@ class CreateUserData(CommandData):
         else:
             raise ValueError("Please enter a valid email format!")
 
-    def validate_password(password):
-        if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
-            return password
-        else:
-            raise ValueError("Password must contain at least 8 letters and at least 1 UPPERCASE letter and 1 NUMBER")
+    # def validate_password(password):
+    #     if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
+    #         return password
+    #     else:
+    #         raise ValueError("Password must contain at least 8 letters and at least 1 UPPERCASE letter and 1 NUMBER")
     telecom__email = field(
         type=str,
         mandatory=True,
         factory=validate_username
     )
-    password = field(
-        type=str,
-        mandatory=True,
-        factory=validate_password
-    )
+    # password = field(
+    #     type=str,
+    #     mandatory=True,
+    #     factory=validate_password
+    # )
 
 class CreateUserEventData(EventData):
     _id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
-
     telecom__email = field(type=str, mandatory=True)
-    password = field(type=str, mandatory=True)
-    # status = field(type=str, mandatory=True)
     status = field(type=AccountStatus, factory=AccountStatus)
+    # password = field(type=str, mandatory=True)
+    # status = field(type=str, mandatory=True)
 
 class UpdateUserData(CommandData):
     telecom__email = field(type=str, mandatory=True)

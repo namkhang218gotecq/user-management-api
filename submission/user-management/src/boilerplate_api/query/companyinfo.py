@@ -25,7 +25,7 @@ class CompanyInfoQueryResource(QueryResource):
     _updater = f.UUIDField("Updater")
 
 class CompanyinfoQuery(CompanyInfoQueryResource):
-    __table__ =  "company-info"
+    __table__ =  "view--company-info"
     
     class Meta:
         tags = ["query"]

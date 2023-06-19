@@ -4,8 +4,8 @@ from sanic_query.resource import QueryResource
 
 class OfficialRoleQueryResource(QueryResource):
 
-    
-    profile_id = f.UUIDField("profile_id",  identifier=True)
+    company_id =f.UUIDField("company_id", identifier=True)
+    profile_id = f.UUIDField("profile_id")
     name__family = f.StringField("name__family")
     name__given = f.StringField("name__given")
     role_name = f.StringField("role_name")
@@ -14,7 +14,7 @@ class OfficialRoleQueryResource(QueryResource):
     company_name = f.StringField("company_name")
 
 class OfficialRoleQuery(OfficialRoleQueryResource):
-    __table__ =  "users-with-official-role"
+    __table__ =  "view--official-role"
     
     class Meta:
         tags = ["query"]

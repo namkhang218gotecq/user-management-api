@@ -3,10 +3,10 @@ from sanic_query import field as f
 from sanic_query.resource import QueryResource
 
 class UserInfoQueryResource(QueryResource):
-
     
-    account_id = f.UUIDField("account_id",  identifier=True)
-    profile_id = f.UUIDField("profile_id")
+    _id = f.StringField("_id", identifier=True)
+    
+    profile_id = f.StringField("profile_id")
     account_username = f.StringField("account_username")
     name__family = f.StringField("name__family")
     name__given = f.StringField("name__given")
@@ -24,17 +24,26 @@ class UserInfoQueryResource(QueryResource):
   
 
 class UserinfoQuery(UserInfoQueryResource):
-    __table__ =  "user-info-view"
+    __table__ =  "view--user-info"
+    __endpoint__ = "account/<account_id>/profile"
     
     class Meta:
         tags = ["query"]
         description = "User Info"
-    
- 
- 
- 
- 
- 
- 
- 
- 
+        parameters = [
+            {
+                "name": "account_id",
+                "in": "path",
+                "description": "Account ID",
+                "required": True,
+                "schema": {"type": "string"},
+            },
+        ]
+    # @classmethod
+    # def base_query(cls, parsed_query, user=None):
+    #     return {
+    #         "account_id": parsed_query.url_params["account_id"],
+    #     }
+        
+#  57341d6d-24dd-48fc-a61d-f678f459f238
+#  6daab2b4-40f0-4f11-967a-c5d0e8192097

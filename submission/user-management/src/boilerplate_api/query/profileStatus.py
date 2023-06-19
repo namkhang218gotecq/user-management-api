@@ -10,7 +10,7 @@ class ProfileStatusQueryResource(QueryResource):
     
 
 class ProfileStatusQuery(ProfileStatusQueryResource):
-    __table__ =  "profile-status-count"
+    __table__ =  "view--profile-status"
     
     class Meta:
         tags = ["query"]

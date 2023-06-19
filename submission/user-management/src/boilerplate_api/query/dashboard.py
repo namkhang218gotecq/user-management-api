@@ -13,7 +13,7 @@ class DashboardQueryResource(QueryResource):
     
 
 class DashboardQuery(DashboardQueryResource):
-    __table__ =  "dashboard-info"
+    __table__ =  "view--dashboard-info"
     
     class Meta:
         tags = ["query"]
