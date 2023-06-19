@@ -63,8 +63,32 @@ async def process__activate_account(statemgr, event):
         data=event.data, 
         identifier=event.target.identifier
     )
+#expired-account
+@_entity('expired-account')
+class ExpiredAccount(Event):
+    data = field(type=UpdateStatusAccountEvent, mandatory=True)
 
+@_committer(ExpiredAccount)
+async def process__expired_account(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
 
+#pending-account
+@_entity('pending-account')
+class PendingAccount(Event):
+    data = field(type=UpdateStatusAccountEvent, mandatory=True)
+
+@_committer(PendingAccount)
+async def process__pending_account(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
+    
 #Create System role
 @_entity
 class SystemRoleCreated(Event):
@@ -123,8 +147,30 @@ async def process__activate_company(statemgr, event):
         data=event.data, 
         identifier=event.target.identifier
     )
-    
+# setup-company
+@_entity('setuped-company')
+class SetupCompany(Event):
+    data = field(type=UpdateStatusCompanyEvent, mandatory=True)
 
+@_committer(SetupCompany)
+async def process__setup_company(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
+#reviewed-company
+@_entity('reviewed-company')
+class ReviewCompany(Event):
+    data = field(type=UpdateStatusCompanyEvent, mandatory=True)
+
+@_committer(ReviewCompany)
+async def process__setup_company(statemgr, event):
+    yield UpdateRecord(
+        resource=event.target.resource, 
+        data=event.data, 
+        identifier=event.target.identifier
+    )
 #Create profile
 @_entity
 class ProfileCreated(Event):

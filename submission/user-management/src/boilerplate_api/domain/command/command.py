@@ -193,7 +193,86 @@ async def handle_activate_account(aggproxy, cmd: ActivateAccount):
     #     message=f"Activated account: {username}",
     #     msglabel="activate-account",
     # )
-    
+
+#EXPIRED account 
+@_entity
+class ExpiredAccount(Command):
+    #pass    
+    class Meta:
+        resource = "user/{id}"
+        tags = ["user"]
+        description = "Expired account"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Account ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(ExpiredAccount)
+async def handle_expired_account(aggproxy, cmd: ExpiredAccount):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "account_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        company = await aggproxy.state.fetch(
+            "company", profile.company_id
+        )
+        event_status_user = await aggproxy.update_profile_status(UpdateProfileData(status = combine_profile_status(AccountStatus.EXPIRED, company.status), _id = profile._id))
+        yield event_status_user
+    event = await aggproxy.expired_account(cmd.data)
+    yield event
+
+#Pending account 
+@_entity
+class PendingAccount(Command):
+    #pass    
+    class Meta:
+        resource = "user/{id}"
+        tags = ["user"]
+        description = "Pending account"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Account ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(PendingAccount)
+async def handle_pending_account(aggproxy, cmd: PendingAccount):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "account_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        company = await aggproxy.state.fetch(
+            "company", profile.company_id
+        )
+        event_status_user = await aggproxy.update_profile_status(UpdateProfileData(status = combine_profile_status(AccountStatus.PENDING, company.status), _id = profile._id))
+        yield event_status_user
+    event = await aggproxy.pending_account(cmd.data)
+    yield event
     
 #Create system role 
 @_entity("create-system-role") 
@@ -405,7 +484,96 @@ async def handle_activate_company(aggproxy, cmd: ActivateCompany):
         message=f"Activated company: {company_name}",
         msglabel="activate-company",
     )
+# SETUP company
+@_entity
+class SetupCompany(Command):
+    
+    class Meta:
+        resource = "company/{id}"
+        tags = ["company"]
+        description = "Setup company"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Company ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(SetupCompany)
+async def handle_setup_company(aggproxy, cmd: SetupCompany):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "company_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        account = await aggproxy.state.fetch(
+        "user", profile.account_id
+        )
+        event_status_company = await aggproxy.update_profile_status(
+            UpdateProfileData(
+                status = combine_profile_status(
+                    account.status, CompanyStatus.SETUP), _id = profile._id))
+        yield event_status_company
+    
+    
+    event = await aggproxy.setup_company(cmd.data)
+    yield event
 
+# Review company
+@_entity
+class ReviewCompany(Command):
+    
+    class Meta:
+        resource = "company/{id}"
+        tags = ["company"]
+        description = "Review company"
+        parameters = [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "Company ID: ",
+                "required": True,
+                "schema": {
+                    "type": "string",
+                },
+            }
+        ]
+        
+@_handler(ReviewCompany)
+async def handle_review_company(aggproxy, cmd: ReviewCompany):
+    profile_list = await aggproxy.state.find(
+        "profile",
+        data_query = {
+            "where": {
+                "company_id": cmd.aggroot.identifier,
+                
+            }   
+        }
+    )
+    for profile in profile_list:
+        account = await aggproxy.state.fetch(
+        "user", profile.account_id
+        )
+        event_status_company = await aggproxy.update_profile_status(
+            UpdateProfileData(
+                status = combine_profile_status(
+                    account.status, CompanyStatus.REVIEW), _id = profile._id))
+        yield event_status_company
+    
+    
+    event = await aggproxy.review_company(cmd.data)
+    yield event
+    
 # Create profile
 @_entity("create-profile")
 class CreateProfile(Command):

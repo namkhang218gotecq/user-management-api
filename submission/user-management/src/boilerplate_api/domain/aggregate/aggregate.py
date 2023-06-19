@@ -71,7 +71,7 @@ class UserAggregate(Aggregate):
     async def do__activate_account(self, data: UpdateStatusAccountData) -> Event:
         account = await self.fetch_aggroot()
 
-        if account.status == "ACTIVE":
+        if account.status == AccountStatus.ACTIVE:
             raise ValueError("The current account is ACTIVE. Please enter another account id.")
         
         return self.create_event(
@@ -81,6 +81,34 @@ class UserAggregate(Aggregate):
                 status=AccountStatus.ACTIVE,
             )
     )
+# expired account
+    async def do__expired_account(self, data: UpdateStatusAccountData) -> Event:
+        account = await self.fetch_aggroot()
+
+        if account.status == AccountStatus.EXPIRED:
+            raise ValueError("The current account is EXPIRED. Please enter another account id.")
+        
+        return self.create_event(
+            "expired-account",
+            target=self.aggroot, 
+            data=UpdateStatusAccountEvent(
+                status=AccountStatus.EXPIRED,
+            )
+    )
+# pending account
+    async def do__pending_account(self, data: UpdateStatusAccountData) -> Event:
+        account = await self.fetch_aggroot()
+
+        if account.status == AccountStatus.PENDING:
+            raise ValueError("The current account is PENDING. Please enter another account id.")
+        
+        return self.create_event(
+            "pending-account",
+            target=self.aggroot, 
+            data=UpdateStatusAccountEvent(
+                status=AccountStatus.PENDING,
+            )
+    ) 
 #System role
 
 class SystemRoleAggregate(Aggregate):
@@ -120,7 +148,7 @@ class CompanyAggregate(Aggregate):
     async def do__deactivate_company(self, data: UpdateStatusCompanyData) -> Event:
         company = await self.fetch_aggroot()
 
-        if company.status == "INACTIVE":
+        if company.status == CompanyStatus.INACTIVE:
             raise ValueError("The current company is INACTIVE. Please enter another company id.")
         
         return self.create_event(
@@ -134,17 +162,44 @@ class CompanyAggregate(Aggregate):
     async def do__activate_company(self, data: UpdateStatusCompanyData) -> Event:
         company = await self.fetch_aggroot()
 
-        if company.status == "ACTIVE":
+        if company.status == CompanyStatus.ACTIVE:
             raise ValueError("The current company is ACTIVE. Please enter another company id.")
         
         return self.create_event(
             "activated-company",
             target=self.aggroot, 
             data=UpdateStatusCompanyEvent(
-                status="ACTIVE",
+                status=CompanyStatus.ACTIVE,
             )
     )
+# Setup company
+    async def do__setup_company(self, data: UpdateStatusCompanyData) -> Event:
+        company = await self.fetch_aggroot()
 
+        if company.status == CompanyStatus.SETUP:
+            raise ValueError("The current company is SETUP. Please enter another company id.")
+        
+        return self.create_event(
+            "setuped-company",
+            target=self.aggroot, 
+            data=UpdateStatusCompanyEvent(
+                status=CompanyStatus.SETUP,
+            )
+    )
+# review company
+    async def do__review_company(self, data: UpdateStatusCompanyData) -> Event:
+        company = await self.fetch_aggroot()
+
+        if company.status == CompanyStatus.REVIEW:
+            raise ValueError("The current company is REVIEW. Please enter another company id.")
+        
+        return self.create_event(
+            "reviewed-company",
+            target=self.aggroot, 
+            data=UpdateStatusCompanyEvent(
+                status=CompanyStatus.REVIEW,
+            )
+    )
 # Create profile
 
 class ProfileAggregate(Aggregate):
