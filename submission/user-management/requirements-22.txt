@@ -1,0 +1,34 @@
+aiohttp
+aioredis==1.3.1 # arq only support aioredis v1 https://github.com/samuelcolvin/arq/issues/250
+arq
+asyncpg
+blinker
+cryptography
+diskcache
+gino
+gmqtt
+iso8601
+jinja2
+mdutils
+minio
+pdfkit
+psycopg2-binary
+pyjwt
+pypdf2
+pypdftk
+pyrsistent
+python-dateutil
+python-slugify
+pyx12
+pyyaml
+redis
+requests
+sanic
+sanic-jinja2
+sanic-motor
+sentry-sdk
+simplejson
+sqlalchemy==1.3.24 # gino 1.0 only support sqlalchemy 1.3 https://python-gino.org/docs/en/master/how-to/faq.html
+stop-words
+xlsxwriter
+sanic==22.3.2

@@ -1,0 +1,21 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: User Management API
+  version: rc0.1
+components:
+  securitySchemes:
+    ApiKeyAuth: # arbitrary name for the security scheme
+      type: apiKey
+      in: header # can be "header", "query" or "cookie"
+      name: Cookie # name of the header, query parameter or cookie
+# 2) Apply the API key globally to all operations
+security:
+  - ApiKeyAuth: []
+servers:
+  - url: https://api.local.gotecq.net
+    description: API local server
+  - url: https://boilerplate-api.local.fiisoft.net
+    description: Localhost server
+  - url: http://localhost:8080
+    description: Localhost server
