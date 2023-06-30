@@ -18,17 +18,17 @@ class CreateUserData(CommandData):
             return email
         else:
             raise ValueError("Please enter a valid email format!")
-
-    # def validate_password(password):
-    #     if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
-    #         return password
-    #     else:
-    #         raise ValueError("Password must contain at least 8 letters and at least 1 UPPERCASE letter and 1 NUMBER")
     telecom__email = field(
         type=str,
         mandatory=True,
         factory=validate_username
     )
+    # def validate_password(password):
+    #     if len(password) >= 8 and re.search(r'[A-Z]', password) and re.search(r'\d', password):
+    #         return password
+    #     else:
+    #         raise ValueError("Password must contain at least 8 letters and at least 1 UPPERCASE letter and 1 NUMBER")
+    
     # password = field(
     #     type=str,
     #     mandatory=True,
@@ -151,7 +151,16 @@ class CreateProfileData(CommandData):
     company_id = field(type=UUID_TYPE, factory=to_uuid, mandatory=True)
     name__family = field(type=str, mandatory=True)
     name__given = field(type=str, mandatory=True)
-    telecom__email = field(type=nullable(str))
+    def validate_username(email):
+        if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            return email
+        else:
+            raise ValueError("Please enter a valid email format!")
+    telecom__email = field(
+        type=str,
+        mandatory=True,
+        factory=validate_username
+    )
     # từ telecom__email: đi tìm account có telecom__email trùng
     # TH1: Nếu không tìm thấy account có email đó
     # Thì tạo account trước, gắn account id vào profile

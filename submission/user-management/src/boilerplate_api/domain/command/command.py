@@ -770,6 +770,9 @@ class ActiveProfile(Command):
     
 @_handler(ActiveProfile)
 async def handle_active_profile(aggproxy, cmd: UpdateStatusProfileData):
+    
+    company = aggproxy.state.fetch(
+        "company", cmd.data.company_id)
     event = await aggproxy.active_profile(cmd.data)
     yield event   
     

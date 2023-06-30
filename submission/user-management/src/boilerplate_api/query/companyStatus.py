@@ -4,7 +4,7 @@ from sanic_query.resource import QueryResource
 
 class CompanyStatusQueryResource(QueryResource):
 
-    type = f.StringField("type", identifier=True)
+    type = f.StringField("type", identifier=True, source="status")
     bg_color = f.StringField("bg_color")
     amount = f.StringField("amount")
     
